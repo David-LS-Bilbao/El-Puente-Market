@@ -1,9 +1,7 @@
 import { Router } from "express";
 import categoryRouter from "../categoryRouter.js";
 
+const apiRouter = Router();
+apiRouter.use('/category', categoryRouter);
 
-const router = Router();
-
-router.use('/category', categoryRouter);
-
-export default router;
+export default apiRouter;

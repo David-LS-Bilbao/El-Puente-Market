@@ -5,5 +5,5 @@ async function getAllCategories(req, res) {
     res.json(category);
 };
 
-export { getAllCategories };
+export const functions = { getAllCategories };
 export default functions;
