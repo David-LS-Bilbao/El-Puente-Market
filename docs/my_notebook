@@ -228,3 +228,78 @@ El siguiente bloque de trabajo debería centrarse en:
 Durante esta fase hubo varias decisiones de equipo tomadas de forma menos estructurada de lo deseable, especialmente en la parte de base de datos y arranque del proyecto. Aun así, se ha intentado mantener orden, trazabilidad y criterio técnico suficiente para que el proyecto pueda seguir avanzando sin perder de vista los requisitos de entrega.
 
 Por este motivo, además del trabajo técnico, se ha empezado también a llevar un registro paralelo de decisiones, problemas y avances para facilitar después la redacción de la memoria final del proyecto.
+
+---
+
+## Actualización posterior: cierre funcional de la feature `cart`
+
+Después de la fase inicial de arranque del backend, se trabajó en la implementación de la API del recurso `cart` para ampliar el número de endpoints funcionales del proyecto y dejar cubierta también una operación de escritura en base de datos.
+
+### Trabajo realizado en esta fase
+
+Se implementó la feature de `cart` con los siguientes elementos:
+
+- conexión del recurso `cart` dentro del enrutado general de la API
+- creación de `src/routes/cartRouter.js`
+- creación del controlador `src/controllers/api/cartController.js`
+- uso de `CartModel` con asociaciones a `UserModel` y `ProductModel`
+- validación manual con Postman
+
+### Endpoints operativos de `cart`
+
+Tras los ajustes realizados, quedaron operativos estos endpoints:
+
+- `GET /api/cart`
+- `GET /api/cart/user/:userDni`
+- `POST /api/cart`
+- `DELETE /api/cart/:id`
+
+### Problemas detectados durante la implementación
+
+Durante el desarrollo de la feature aparecieron varios errores reales que hubo que corregir:
+
+- imports inconsistentes en `src/models/index.js`
+- diferencias entre los nombres reales de archivos de modelos y los imports usados
+- validación antigua en `createCartItem`, que seguía esperando `purchase_timestamp`
+- dudas iniciales sobre si borrar por `user_dni + product_id` o por `id`
+- errores funcionales al probar el `POST` por reinicio pendiente del servidor y por desfase entre código y proceso en ejecución
+
+### Correcciones aplicadas
+
+Se dejaron corregidos estos puntos:
+
+- `models/index.js` quedó alineado con los nombres reales de los modelos `*.Model.js`
+- el `POST /api/cart` quedó adaptado al esquema real actual de la tabla `cart`
+- `quantity` quedó con valor por defecto razonable
+- el borrado se pasó a `DELETE /api/cart/:id`, usando la clave primaria real del carrito
+
+### Esquema real actual de `cart`
+
+La tabla `cart` quedó trabajando con estas columnas:
+
+- `id`
+- `user_dni`
+- `product_id`
+- `quantity`
+- `updated_at`
+- `total_amount`
+- `created_at`
+
+### Estado funcional validado
+
+En el estado actual del proyecto se ha validado que:
+
+- el servidor arranca correctamente
+- la conexión con PostgreSQL funciona
+- Sequelize sincroniza la base de datos
+- `GET /api/category` responde correctamente
+- `GET /api/cart` responde `200 OK`
+- `GET /api/cart/user/:userDni` responde `200 OK`
+- `POST /api/cart` responde `201 Created`
+- el borrado de elementos del carrito funciona usando el `id` correcto de la fila
+
+### Valor de esta fase
+
+Esta fase ha permitido dejar el backend en un punto mejor que el inicial, porque ya no existe solo un endpoint de lectura aislado, sino un bloque funcional adicional con lectura, creación y borrado sobre un recurso real del proyecto.
+
+Aunque todavía quedan requisitos globales por completar, la API del carrito ya sirve como evidencia clara de avance técnico real en backend, modelo de datos y consumo desde cliente de pruebas.

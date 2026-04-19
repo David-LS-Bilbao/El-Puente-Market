@@ -1,7 +1,7 @@
-import CartModel from "./cartModel.js";
-import CategoryModel from "./categoryModel.js";
-import ProductModel from "./productModel.js";
-import UserModel from "./userModel.js";
+import CartModel from "./cart.Model.js";
+import CategoryModel from "./category.Model.js";
+import ProductModel from "./product.Model.js";
+import UserModel from "./user.Model.js";
 
 CategoryModel.hasMany(ProductModel, { foreignKey: "id_category" });
 ProductModel.belongsTo(CategoryModel, { foreignKey: "id_category" });
@@ -24,3 +24,6 @@ UserModel.hasMany(CartModel, { foreignKey: "user_dni" });
 ProductModel.hasMany(CartModel, { foreignKey: "product_id" });
 
 export { CartModel, CategoryModel, ProductModel, UserModel };
+
+
+
