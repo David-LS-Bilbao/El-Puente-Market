@@ -18,9 +18,8 @@ async function addNewProduct(req, res) {
 };
 
 async function changeProduct(req, res) {
-    const product = await ProductModel.update(req.body, { where: { id: req.params.id } });
-    const updatedProduct = await ProductModel.findByPk(id);
-    res.json(updatedProduct);
+    const product = await ProductModel.update(req.body, { where: { id: req.params.id }, returning: true });
+    res.json(product);
 };
 
 async function changeProductField(req, res) {
