@@ -1,0 +1,122 @@
+/* TÍTULO DE PÁGINA */
+.page-title {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: #333;
+  border-bottom: 2px solid #fbb118;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+/* GRID DE PRODUCTOS (5 por fila) */
+.products-grid {
+  display: grid;
+  /* Creamos 5 columnas de igual tamaño */
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+/* TARJETA DE PRODUCTO */
+.product-card {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+/* IMAGEN */
+.product-image {
+  width: 100%;
+  aspect-ratio: 1/1; /* Mantiene la imagen cuadrada */
+  background-color: #f9f9f9;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Para que el producto no se deforme */
+  padding: 10px;
+}
+
+/* INFORMACIÓN */
+.product-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-name {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: #000;
+}
+
+.product-category {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* FOOTER DE LA TARJETA (Precio y Botón) */
+.product-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-price {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #000;
+}
+
+.add-to-cart-btn {
+  background-color: #fbb118;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #e5a016;
+}
+
+/* RESPONSIVE (Ajuste de columnas) */
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
