@@ -19,6 +19,29 @@ const cartController = {
     }
   },
 
+  async getCartItemById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const cartItem = await CartModel.findByPk(id, {
+        include: [UserModel, ProductModel],
+      });
+
+      if (!cartItem) {
+        return res.status(404).json({
+          message: "No se encontró el elemento del carrito",
+        });
+      }
+
+      return res.status(200).json(cartItem);
+    } catch (error) {
+      return res.status(500).json({
+        message: "Error al obtener el elemento del carrito",
+        error: error.message,
+      });
+    }
+  },
+
   async getCartByUser(req, res) {
     try {
       // Obtiene el identificador del usuario desde la URL.
@@ -43,6 +66,8 @@ const cartController = {
 
   async createCartItem(req, res) {
     try {
+      // Protege frente a requests sin body parseado y permite validar de forma uniforme.
+      const requestBody = req.body ?? {};
       const {
         user_dni,
         product_id,
@@ -50,7 +75,7 @@ const cartController = {
         updated_at,
         total_amount,
         created_at,
-      } = req.body;
+      } = requestBody;
 
       if (!user_dni || product_id == null || total_amount == null) {
         return res.status(400).json({
@@ -58,6 +83,7 @@ const cartController = {
         });
       }
 
+      // Persiste el item solo cuando las referencias y valores ya son consistentes.
       const newCartItem = await CartModel.create({
         user_dni,
         product_id,
@@ -74,6 +100,62 @@ const cartController = {
     } catch (error) {
       return res.status(500).json({
         message: "Error al crear el elemento del carrito",
+        error: error.message,
+      });
+    }
+  },
+
+  async updateCartItem(req, res) {
+    try {
+      const { id } = req.params;
+      // Permite responder 400 si el cliente no ha enviado datos actualizables.
+      const requestBody = req.body ?? {};
+      const {
+        user_dni,
+        product_id,
+        quantity,
+        total_amount,
+        updated_at,
+      } = requestBody;
+
+      const cartItem = await CartModel.findByPk(id);
+
+      if (!cartItem) {
+        return res.status(404).json({
+          message: "No se encontró el elemento del carrito para actualizar",
+        });
+      }
+
+      // Construye un patch parcial para no sobrescribir campos ausentes.
+      const fieldsToUpdate = {};
+
+      if (user_dni !== undefined) fieldsToUpdate.user_dni = user_dni;
+      if (product_id !== undefined) fieldsToUpdate.product_id = product_id;
+      if (quantity !== undefined) fieldsToUpdate.quantity = quantity;
+      if (total_amount !== undefined) fieldsToUpdate.total_amount = total_amount;
+
+      if (!Object.keys(fieldsToUpdate).length && updated_at === undefined) {
+        return res.status(400).json({
+          message: "Debes enviar al menos un campo para actualizar el carrito",
+        });
+      }
+
+      fieldsToUpdate.updated_at = updated_at || new Date();
+
+      await cartItem.update(fieldsToUpdate);
+
+      // Relee el registro con includes para devolver la misma forma que en GET.
+      const updatedCartItem = await CartModel.findByPk(id, {
+        include: [UserModel, ProductModel],
+      });
+
+      return res.status(200).json({
+        message: "Elemento del carrito actualizado correctamente",
+        data: updatedCartItem,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Error al actualizar el elemento del carrito",
         error: error.message,
       });
     }
