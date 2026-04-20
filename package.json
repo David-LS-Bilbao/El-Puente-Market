@@ -21,7 +21,9 @@
   "homepage": "https://github.com/David-LS-Bilbao/el-puente-market#readme",
   "dependencies": {
     "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
     "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
     "pg": "^8.20.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.8"

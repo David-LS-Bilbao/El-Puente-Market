@@ -1,0 +1,94 @@
+/* Reset básico */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+.header {
+    background-color: #FBB118;
+    color: #000000;
+    padding: 5px 20px;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    /* separa izquierda y derecha */
+    align-items: center;
+}
+
+/* IZQUIERDA */
+.left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    aspect-ratio: 22/9;
+    height: 100px;
+}
+
+.title {
+    margin: 0;
+}
+
+/* DERECHA (carrito + login) */
+.right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ICONOS */
+.icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* BOTONES ICONO */
+.icon-btn {
+    color: #000000;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* HOVER */
+.icon-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+/* NAV */
+.nav {
+    margin-top: 10px;
+}
+
+.nav a {
+    color: #000000;
+    margin-right: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+/* MAIN */
+.main-content {
+    padding: 20px;
+}
+
+/* FOOTER */
+.footer {
+    background-color: #FBB118;
+    color: #000000;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+}
