@@ -19,6 +19,7 @@ async function buildCartViewData(userDni) {
   const cartItems = await CartModel.findAll({
     where: { user_dni: userDni },
     include: [ProductModel],
+    order: [["id", "ASC"]],
   });
 
   const items = cartItems.map((item) => ({

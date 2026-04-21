@@ -1,5 +1,4 @@
 <div class="cart-sidebar">
-    <!-- Cabecera del panel lateral del carrito. -->
     <div class="cart-sidebar__header">
         <div>
             <p class="cart-sidebar__eyebrow">Carrito</p>
@@ -11,17 +10,15 @@
     </div>
 
     <% if (isEmpty) { %>
-        <!-- Estado vacío cuando el usuario no tiene líneas en el carrito. -->
         <section class="cart-sidebar__empty">
             <h3>Tu carrito está vacío</h3>
             <p>Añade productos para verlos reflejados aquí.</p>
             <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
         </section>
     <% } else { %>
-        <!-- Listado resumido de productos cargado con datos reales desde la BBDD. -->
         <div class="cart-sidebar__list" aria-label="Productos del carrito">
             <% items.forEach((item) => { %>
-                <article class="cart-sidebar__item">
+                <article class="cart-sidebar__item" data-item-id="<%= item.id %>" data-quantity="<%= item.quantity %>">
                     <% if (item.productImage) { %>
                         <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="cart-sidebar__image">
                     <% } else { %>
@@ -30,14 +27,28 @@
 
                     <div class="cart-sidebar__item-content">
                         <h3><%= item.productName %></h3>
-                        <p>Cantidad: <strong><%= item.quantity %></strong></p>
-                        <p>Subtotal: <strong><%= item.subtotalFormatted %></strong></p>
+
+                        <div class="cart-sidebar__qty-row">
+                            <button type="button" class="cart-qty-btn" data-action="minus" aria-label="Disminuir cantidad">−</button>
+                            <span class="cart-qty-value"><%= item.quantity %></span>
+                            <button type="button" class="cart-qty-btn" data-action="plus" aria-label="Aumentar cantidad">+</button>
+                            <button type="button" class="cart-delete-btn" data-action="delete" aria-label="Eliminar producto">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                    <path d="M10 11v6"></path>
+                                    <path d="M14 11v6"></path>
+                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <p class="cart-sidebar__subtotal">Subtotal: <strong><%= item.subtotalFormatted %></strong></p>
                     </div>
                 </article>
             <% }) %>
         </div>
 
-        <!-- Resumen final del carrito con el total calculado en servidor. -->
         <div class="cart-sidebar__footer">
             <div class="cart-sidebar__total">
                 <span>Total general</span>

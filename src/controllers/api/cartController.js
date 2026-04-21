@@ -108,15 +108,9 @@ const cartController = {
   async updateCartItem(req, res) {
     try {
       const { id } = req.params;
-      // Permite responder 400 si el cliente no ha enviado datos actualizables.
       const requestBody = req.body ?? {};
-      const {
-        user_dni,
-        product_id,
-        quantity,
-        total_amount,
-        updated_at,
-      } = requestBody;
+      // total_amount nunca viene del cliente: se recalcula desde el producto real.
+      const { user_dni, product_id, quantity } = requestBody;
 
       const cartItem = await CartModel.findByPk(id);
 
@@ -126,25 +120,34 @@ const cartController = {
         });
       }
 
-      // Construye un patch parcial para no sobrescribir campos ausentes.
       const fieldsToUpdate = {};
 
       if (user_dni !== undefined) fieldsToUpdate.user_dni = user_dni;
       if (product_id !== undefined) fieldsToUpdate.product_id = product_id;
       if (quantity !== undefined) fieldsToUpdate.quantity = quantity;
-      if (total_amount !== undefined) fieldsToUpdate.total_amount = total_amount;
 
-      if (!Object.keys(fieldsToUpdate).length && updated_at === undefined) {
+      if (!Object.keys(fieldsToUpdate).length) {
         return res.status(400).json({
           message: "Debes enviar al menos un campo para actualizar el carrito",
         });
       }
 
-      fieldsToUpdate.updated_at = updated_at || new Date();
+      // Recalcula total_amount desde el precio real del producto en BD.
+      const effectiveProductId = fieldsToUpdate.product_id ?? cartItem.product_id;
+      const effectiveQuantity = fieldsToUpdate.quantity ?? cartItem.quantity;
+      const product = await ProductModel.findByPk(effectiveProductId);
+      if (!product) {
+        return res.status(400).json({ message: "Producto no encontrado" });
+      }
+      const unitPrice =
+        product.on_discount && product.price_discount != null
+          ? Number(product.price_discount)
+          : Number(product.price);
+      fieldsToUpdate.total_amount = (unitPrice * effectiveQuantity).toFixed(2);
+      fieldsToUpdate.updated_at = new Date();
 
       await cartItem.update(fieldsToUpdate);
 
-      // Relee el registro con includes para devolver la misma forma que en GET.
       const updatedCartItem = await CartModel.findByPk(id, {
         include: [UserModel, ProductModel],
       });
