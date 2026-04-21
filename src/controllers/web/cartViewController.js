@@ -60,6 +60,31 @@ const cartViewController = {
       });
     }
   },
+
+  async deleteCartItemAndRedirect(req, res) {
+    try {
+      const { userDni, id } = req.params;
+
+      // Limita el borrado al carrito del usuario indicado en la URL para no
+      // eliminar una linea ajena por error.
+      const cartItem = await CartModel.findOne({
+        where: {
+          id,
+          user_dni: userDni,
+        },
+      });
+
+      if (!cartItem) {
+        return res.status(404).send("No se encontró la linea del carrito");
+      }
+
+      await cartItem.destroy();
+
+      return res.redirect(`/carrito/${userDni}`);
+    } catch (error) {
+      return res.status(500).send("No se pudo eliminar la linea del carrito");
+    }
+  },
 };
 
 export default cartViewController;

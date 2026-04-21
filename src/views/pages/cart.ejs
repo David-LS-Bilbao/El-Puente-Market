@@ -37,6 +37,12 @@
                                 <dd><%= item.subtotalFormatted %></dd>
                             </div>
                         </dl>
+
+                        <!-- Accion minima de esta iteracion para eliminar una linea -->
+                        <form action="/carrito/<%= userDni %>/item/<%= item.id %>/delete" method="POST"
+                            class="cart-item__actions">
+                            <button type="submit" class="cart-item__delete-btn">Eliminar</button>
+                        </form>
                     </div>
                 </article>
             <% }) %>
