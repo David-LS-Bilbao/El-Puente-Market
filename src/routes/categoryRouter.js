@@ -1,8 +1,9 @@
 import { Router } from "express";
-import categoryController from "../controllers/api/categoryController.js";
-import functions from "../controllers/api/categoryController.js";
+import categoryController from "../controllers/api/categoryController.js";  
 
-const categoryRouter = Router();
-categoryRouter.get("/", functions.getAllCategories);
+//Buscar crear imprimir lista
+const router = Router();
+router.get('/', categoryController.list);
+router.post('/', categoryController.create);
 
-export default categoryRouter;
+export default router;  
