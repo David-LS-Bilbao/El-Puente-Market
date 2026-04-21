@@ -1,4 +1,5 @@
 import { CategoryModel, ProductModel } from "../../models/index.js";
+import productServices from "../services/productServices.js";
 
 /**
  * Obtiene todos los productos almacenados en la base de datos.
@@ -8,9 +9,9 @@ import { CategoryModel, ProductModel } from "../../models/index.js";
  * @returns {Promise<void>}
  */
 async function getAllProducts(req, res) {
-    const products = await ProductModel.findAll();
-    res.json(products);
-};
+  const products = await productServices.getAllProducts();
+  res.json(products);
+}
 
 /**
  * Obtiene todos los productos que pertenecen a una categoría específica.
@@ -20,11 +21,9 @@ async function getAllProducts(req, res) {
  * @returns {Promise<void>}
  */
 async function getProductsByCategory(req, res) {
-    const products = await ProductModel.findAll({
-        where: { id_category: req.params.id }, include: [CategoryModel]
-    });
-    res.json(products);
-};
+  const products = await productServices.getProductsByCategory(req.params.id);
+  res.json(products);
+}
 
 /**
  * Crea un nuevo producto en la base de datos a partir de los datos recibidos en el body.
@@ -34,9 +33,9 @@ async function getProductsByCategory(req, res) {
  * @returns {Promise<void>}
  */
 async function addNewProduct(req, res) {
-    const newProduct = await ProductModel.create(req.body);
-    res.json(newProduct);
-};
+  const newProduct = await productServices.addNewProduct(req.body);
+  res.json(newProduct);
+}
 
 /**
  * Actualiza un producto existente identificado por su id.
@@ -48,9 +47,9 @@ async function addNewProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function changeProduct(req, res) {
-    const product = await ProductModel.update(req.body, { where: { id: req.params.id }, returning: true });
-    res.json(product);
-};
+  const product = await productServices.updateProduct(req.params.id, req.body);
+  res.json(product);
+}
 
 /**
  * Actualiza campos específicos de un producto existente.
@@ -63,8 +62,8 @@ async function changeProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function changeProductField(req, res) {
-    changeProduct(req, res);
-};
+  changeProduct(req, res);
+}
 
 /**
  * Elimina un producto de la base de datos identificado por su id.
@@ -74,8 +73,16 @@ async function changeProductField(req, res) {
  * @returns {Promise<void>}
  */
 async function deleteProduct(req, res) {
-    const product = await ProductModel.destroy({ where: { id: req.params.id } });
+  const product = await productServices.deleteProduct(req.params.id);
+  res.json(product);
 }
 
-export const functions = { getAllProducts, getProductsByCategory, addNewProduct, changeProduct, changeProductField, deleteProduct };
+export const functions = {
+  getAllProducts,
+  getProductsByCategory,
+  addNewProduct,
+  changeProduct,
+  changeProductField,
+  deleteProduct,
+};
 export default functions;
