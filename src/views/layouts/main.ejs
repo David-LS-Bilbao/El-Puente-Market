@@ -2,9 +2,12 @@
 <html>
 
 <head>
-    <title>El Puente</title>
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'El Puente' %></title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <% if (typeof pageStyle !== 'undefined' && pageStyle) { %>
+        <link rel="stylesheet" href="<%= pageStyle %>">
+    <% } %>
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon">
 </head>
 
 <body>

@@ -1,0 +1,441 @@
+# Registro de trabajo — El Puente Market
+
+## Resumen del estado actual
+
+Durante esta fase se ha realizado el arranque técnico inicial del proyecto backend **El Puente Market**, orientado a una aplicación web e-commerce para un supermercado.
+
+El trabajo realizado hasta ahora ha permitido validar que el proyecto ya es capaz de:
+
+- arrancar con Node y Express
+- conectarse a una base de datos PostgreSQL
+- usar Sequelize como ORM
+- leer datos reales desde la base de datos mediante un endpoint funcional
+
+Aunque el proyecto todavía no cumple todos los requisitos mínimos de la entrega, ya existe una base técnica operativa sobre la que continuar.
+
+---
+
+## Decisiones y contexto de trabajo
+
+Al inicio hubo varios cambios de rumbo en el equipo respecto a la forma de arrancar el proyecto. En una primera fase se planteó una base más estructurada, pero finalmente el equipo decidió reiniciar el repositorio y comenzar desde una base más simple.
+
+A partir de ahí, el grupo decidió avanzar primero por la parte de base de datos, trabajando con PostgreSQL y pgAdmin en local. También se optó por usar **Sequelize** como ORM, lo cual encaja con los requisitos recomendados del proyecto.
+
+Actualmente el repositorio activo del proyecto es:
+
+`https://github.com/David-LS-Bilbao/el-puente-market.git`
+
+La rama principal de trabajo del proyecto es `dev`.
+
+---
+
+## Trabajo realizado
+
+### 1. Revisión del repositorio y del estado real del proyecto
+
+Se revisó el estado del repositorio para comprobar qué había ya implementado y qué faltaba respecto a los requisitos del proyecto grupal backend.
+
+Se confirmó que el proyecto contiene actualmente:
+
+- `Node.js`
+- `Express`
+- `PostgreSQL`
+- `Sequelize`
+- `dotenv`
+- `nodemon`
+
+También se comprobó que:
+
+- el `README.md` estaba vacío
+- el proyecto ya tenía estructura mínima de backend
+- existía conexión a base de datos mediante Sequelize
+- había un primer endpoint funcional para categorías
+
+---
+
+### 2. Revisión de requisitos del proyecto
+
+Se volvió a revisar el enunciado oficial del proyecto grupal backend para identificar con claridad:
+
+#### Requisitos obligatorios
+- README claro
+- memoria del proyecto
+- mínimo 3 tablas relacionadas
+- registro y login funcional
+- roles/permisos
+- al menos 3 endpoints operativos
+- al menos 2 endpoints que modifiquen la base de datos
+- vistas con EJS o PUG
+
+#### Requisitos recomendados
+- JSDoc
+- API REST más independiente
+- uso de ORM/ODM
+
+A partir de esa revisión se concluyó que el proyecto todavía está en fase técnica inicial y que aún no cumple los mínimos obligatorios, aunque ya tiene base real para seguir.
+
+---
+
+### 3. Revisión y análisis del modelo de base de datos
+
+Se revisó el esquema inicial generado en pgAdmin y se detectaron varios problemas de modelado, entre ellos:
+
+- uso de una tabla `cart` como relación directa entre usuario y producto
+- restricción `UNIQUE` incorrecta en la categoría del producto
+- inclusión de datos bancarios en la tabla de usuario
+- uso de tipos de dato mejorables
+- diseño del carrito poco sólido desde el punto de vista de negocio
+
+También se explicó que el modelado correcto debería separar:
+
+- entidad de usuario
+- entidad de producto
+- entidad de categoría
+- entidad de carrito o pedido
+- tabla intermedia de líneas de carrito
+
+Sin embargo, como el equipo decidió mantener temporalmente el esquema actual para no bloquear el trabajo, se dejó constancia de que esa base sirve para pruebas, pero no debe tomarse como modelo final bueno.
+
+---
+
+### 4. Preparación de entorno local en Windows con Docker
+
+Se preparó un entorno local de pruebas en Windows usando Docker Desktop, con dos contenedores:
+
+- PostgreSQL local
+- pgAdmin local
+
+Se levantaron correctamente los contenedores:
+
+- `epm-postgres-local`
+- `epm-pgadmin-local`
+
+Se verificó que PostgreSQL quedaba expuesto en el puerto `5435` y pgAdmin en `5051`.
+
+Después se registró correctamente el servidor dentro de pgAdmin y se confirmó que la base `el_puente_db` estaba accesible.
+
+---
+
+### 5. Carga del esquema y datos de prueba
+
+Se trabajó con el esquema SQL actual del proyecto y posteriormente se añadió un script de carga con:
+
+- 25 categorías
+- 25 productos
+- 25 usuarios
+- 25 registros en carrito
+
+Durante el proceso aparecieron errores normales de transacción y duplicidad de constraints al intentar volver a ejecutar bloques de creación, lo que permitió aclarar la diferencia entre:
+
+- SQL de estructura
+- SQL de inserción de datos
+
+Finalmente se ejecutó correctamente la carga de datos de prueba en una base vacía.
+
+---
+
+### 6. Validación del backend contra la base de datos local
+
+Se revisó el archivo `.env.example` y la configuración real usada por los compañeros, y se adaptó el entorno local para apuntar al PostgreSQL propio en Windows.
+
+Después se arrancó el backend con:
+
+`npm run dev`
+
+El proyecto respondió correctamente y mostró:
+
+- conexión a la base de datos establecida
+- sincronización completada
+- servidor funcionando en el puerto `3000`
+
+Esto confirmó que el backend estaba conectado correctamente a la base local.
+
+---
+
+### 7. Validación del primer endpoint funcional
+
+Se probó el endpoint:
+
+`GET /api/category`
+
+El resultado fue correcto y devolvió la lista real de categorías cargadas en la base de datos.
+
+Esto confirmó que ya existe un flujo backend real funcionando:
+
+- base de datos con datos
+- backend conectado
+- ORM operativo
+- endpoint leyendo datos reales
+
+Este fue un hito importante porque permitió validar el primer caso funcional del proyecto.
+
+---
+
+## Estado actual del proyecto
+
+En este momento el proyecto se encuentra en un estado de **base técnica inicial validada**.
+
+### Ya está hecho
+- entorno local funcional
+- PostgreSQL y pgAdmin operativos
+- conexión del backend a la base de datos
+- Sequelize configurado
+- modelos iniciales creados
+- base de datos poblada con datos de prueba
+- primer endpoint funcional de lectura (`GET /api/category`)
+
+### Aún falta
+- README final del proyecto
+- memoria del proyecto
+- vistas con EJS o PUG
+- sistema de registro
+- sistema de login
+- sistema de roles/permisos
+- al menos 3 endpoints operativos en total
+- al menos 2 endpoints que modifiquen la BD
+- limpieza y consolidación del modelo de datos
+
+---
+
+## Conclusión de esta fase
+
+La parte más importante de esta fase ha sido validar que el proyecto ya tiene una base técnica real y no solo teórica.
+
+Aunque el modelo de datos actual no es todavía el ideal, ya se ha conseguido dejar funcionando la infraestructura mínima necesaria para seguir avanzando con el backend.
+
+A partir de aquí, el siguiente paso lógico del proyecto no es seguir ampliando la base de datos, sino comenzar con el primer bloque obligatorio del enunciado:
+
+- autenticación
+- login y registro
+- roles/permisos
+
+---
+
+## Próximo paso previsto
+
+El siguiente bloque de trabajo debería centrarse en:
+
+1. revisar qué campos finales del usuario van a usarse realmente
+2. definir el rol mínimo (`admin` / `user`)
+3. implementar registro
+
+---
+
+# Vista del carrito web - Iteración 1 
+
+## Rama de trabajo
+
+`PUENTE-37/vista-carrito`
+
+## Objetivo de la iteración
+
+Implementar una primera versión funcional de la vista web del carrito usando EJS,
+con datos reales de base de datos y sin añadir lógica extra fuera del alcance.
+
+## Trabajo realizado
+
+### 1. Capa web del carrito
+
+Se creó la capa web específica del carrito:
+
+- controlador web: `src/controllers/web/cartViewController.js`
+- router web: `src/routes/cartViewRouter.js`
+
+Se añadió la ruta:
+
+- `GET /carrito/:userDni`
+
+También se registró la ruta web del carrito dentro de:
+
+- `src/routes/router.js`
+
+### 2. Corrección de naming
+
+Se renombró:
+
+- `cartViewCotroller.js`
+
+por:
+
+- `cartViewController.js`
+
+para corregir el typo y dejar el naming alineado con el resto del proyecto.
+
+### 3. Controlador web
+
+Se implementó `renderCartView` con estas responsabilidades:
+
+- leer `userDni` desde `req.params`
+- consultar los items del carrito de ese usuario
+- incluir `ProductModel`
+- mapear los datos a una estructura sencilla para la vista
+- normalizar la ruta de imagen del producto
+- calcular el total general en servidor
+- contemplar el estado vacío
+
+### 4. Vista EJS del carrito
+
+Se rehizo `src/views/pages/cart.ejs` para que:
+
+- renderice solo contenido de página
+- use correctamente el layout existente
+- muestre:
+  - nombre del producto
+  - imagen si existe
+  - cantidad
+  - subtotal por línea
+  - total general
+  - estado vacío cuando no hay items
+
+### 5. Integración con layout
+
+Se hizo un ajuste mínimo en `src/views/layouts/main.ejs` para soportar:
+
+- `pageTitle`
+- `pageStyle`
+
+Esto permite cargar `cart.css` solo en la vista del carrito sin tocar el resto
+de páginas más de lo necesario.
+
+### 6. Estilos de la feature
+
+Se implementó `public/css/cart.css` con una capa visual mínima:
+
+- cabecera de la página
+- tarjetas/listado de productos
+- resumen del total
+- estado vacío
+- responsive básico
+
+No se añadió JavaScript ni se tocaron otros estilos fuera de lo imprescindible.
+
+## Archivos creados o modificados en esta iteración
+
+### Creados
+
+- `src/controllers/web/cartViewController.js`
+- `src/routes/cartViewRouter.js`
+- `public/css/cart.css`
+
+### Modificados
+
+- `src/routes/router.js`
+- `src/views/layouts/main.ejs`
+- `src/views/pages/cart.ejs`
+
+### Eliminado por renombre
+
+- `src/controllers/web/cartViewCotroller.js`
+
+## Decisiones tomadas
+
+- No se implementó borrado todavía.
+- No se implementó cambio de cantidad.
+- No se añadió autenticación.
+- No se añadió JavaScript.
+- No se tocó la API del carrito más allá de convivir con ella.
+- La vista se resolvió por render servidor puro para mantener la iteración pequeña.
+
+## Riesgos o puntos a revisar manualmente
+
+- El header sigue enlazando a `/carrito`, pero la ruta funcional actual usa
+  `/carrito/:userDni`.
+- La vista depende de que existan registros reales en `cart` para el usuario probado.
+- La vista de error del proyecto sigue siendo muy básica si ocurre un fallo de carga.
+
+## Resultado de la iteración
+
+La aplicación queda preparada para mostrar una vista web funcional del carrito
+con datos reales de base de datos, manteniendo una implementación simple,
+alineada con el proyecto y sin introducir complejidad innecesaria.
+
+## Pendiente para Iteración 2
+
+- eliminar productos desde la vista
+- redirigir tras borrado
+- mejorar la integración del acceso al carrito desde el header
+4. implementar login
+5. preparar después las vistas mínimas necesarias para cumplir el requisito de navegación con motor de plantillas
+
+---
+
+## Observaciones personales
+
+Durante esta fase hubo varias decisiones de equipo tomadas de forma menos estructurada de lo deseable, especialmente en la parte de base de datos y arranque del proyecto. Aun así, se ha intentado mantener orden, trazabilidad y criterio técnico suficiente para que el proyecto pueda seguir avanzando sin perder de vista los requisitos de entrega.
+
+Por este motivo, además del trabajo técnico, se ha empezado también a llevar un registro paralelo de decisiones, problemas y avances para facilitar después la redacción de la memoria final del proyecto.
+
+---
+
+## Actualización posterior: cierre funcional de la feature `cart`
+
+Después de la fase inicial de arranque del backend, se trabajó en la implementación de la API del recurso `cart` para ampliar el número de endpoints funcionales del proyecto y dejar cubierta también una operación de escritura en base de datos.
+
+### Trabajo realizado en esta fase
+
+Se implementó la feature de `cart` con los siguientes elementos:
+
+- conexión del recurso `cart` dentro del enrutado general de la API
+- creación de `src/routes/cartRouter.js`
+- creación del controlador `src/controllers/api/cartController.js`
+- uso de `CartModel` con asociaciones a `UserModel` y `ProductModel`
+- validación manual con Postman
+
+### Endpoints operativos de `cart`
+
+Tras los ajustes realizados, quedaron operativos estos endpoints:
+
+- `GET /api/cart`
+- `GET /api/cart/user/:userDni`
+- `POST /api/cart`
+- `DELETE /api/cart/:id`
+
+### Problemas detectados durante la implementación
+
+Durante el desarrollo de la feature aparecieron varios errores reales que hubo que corregir:
+
+- imports inconsistentes en `src/models/index.js`
+- diferencias entre los nombres reales de archivos de modelos y los imports usados
+- validación antigua en `createCartItem`, que seguía esperando `purchase_timestamp`
+- dudas iniciales sobre si borrar por `user_dni + product_id` o por `id`
+- errores funcionales al probar el `POST` por reinicio pendiente del servidor y por desfase entre código y proceso en ejecución
+
+### Correcciones aplicadas
+
+Se dejaron corregidos estos puntos:
+
+- `models/index.js` quedó alineado con los nombres reales de los modelos `*.Model.js`
+- el `POST /api/cart` quedó adaptado al esquema real actual de la tabla `cart`
+- `quantity` quedó con valor por defecto razonable
+- el borrado se pasó a `DELETE /api/cart/:id`, usando la clave primaria real del carrito
+
+### Esquema real actual de `cart`
+
+La tabla `cart` quedó trabajando con estas columnas:
+
+- `id`
+- `user_dni`
+- `product_id`
+- `quantity`
+- `updated_at`
+- `total_amount`
+- `created_at`
+
+### Estado funcional validado
+
+En el estado actual del proyecto se ha validado que:
+
+- el servidor arranca correctamente
+- la conexión con PostgreSQL funciona
+- Sequelize sincroniza la base de datos
+- `GET /api/category` responde correctamente
+- `GET /api/cart` responde `200 OK`
+- `GET /api/cart/user/:userDni` responde `200 OK`
+- `POST /api/cart` responde `201 Created`
+- el borrado de elementos del carrito funciona usando el `id` correcto de la fila
+
+### Valor de esta fase
+
+Esta fase ha permitido dejar el backend en un punto mejor que el inicial, porque ya no existe solo un endpoint de lectura aislado, sino un bloque funcional adicional con lectura, creación y borrado sobre un recurso real del proyecto.
+
+Aunque todavía quedan requisitos globales por completar, la API del carrito ya sirve como evidencia clara de avance técnico real en backend, modelo de datos y consumo desde cliente de pruebas.

@@ -1,8 +1,53 @@
-// vista del carrito
-<!DOCTYPE html> 
-<html lang="es">
-<div class="container"> </div>
-<body> 
-    <h1>Carrito de compras</h1>
-</body>
-</html>
+<section class="cart-page">
+    <!-- Cabecera principal de la pagina del carrito -->
+    <header class="cart-page__header">
+        <p class="cart-page__eyebrow">Vista de carrito</p>
+        <h1>Carrito de <%= userDni %></h1>
+    </header>
+
+    <% if (isEmpty) { %>
+        <!-- Estado vacio cuando el usuario no tiene productos en el carrito -->
+        <section class="cart-empty">
+            <h2>Tu carrito está vacío</h2>
+            <p>Añade productos para verlos reflejados aquí.</p>
+        </section>
+    <% } else { %>
+        <!-- Listado de lineas del carrito con datos basicos de cada producto -->
+        <section class="cart-list" aria-label="Productos del carrito">
+            <% items.forEach((item) => { %>
+                <article class="cart-item">
+                    <div class="cart-item__media">
+                        <% if (item.productImage) { %>
+                            <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="cart-item__image">
+                        <% } else { %>
+                            <div class="cart-item__placeholder" aria-hidden="true">Sin imagen</div>
+                        <% } %>
+                    </div>
+
+                    <div class="cart-item__content">
+                        <h2><%= item.productName %></h2>
+
+                        <dl class="cart-item__meta">
+                            <div>
+                                <dt>Cantidad</dt>
+                                <dd><%= item.quantity %></dd>
+                            </div>
+                            <div>
+                                <dt>Subtotal</dt>
+                                <dd><%= item.subtotalFormatted %></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </article>
+            <% }) %>
+        </section>
+
+        <!-- Resumen final del importe total calculado en servidor -->
+        <aside class="cart-summary" aria-label="Resumen del carrito">
+            <div class="cart-summary__row">
+                <span>Total general</span>
+                <strong><%= totalGeneralFormatted %></strong>
+            </div>
+        </aside>
+    <% } %>
+</section>
