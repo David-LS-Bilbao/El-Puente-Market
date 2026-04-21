@@ -1,0 +1,169 @@
+:root {
+    --color-primary: #FBB118;
+    --color-secondary: #2c3e50;
+    --color-bg: #f4f6f9;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gray-light: #f2f2f2;
+    --color-border: #ccc;
+
+    --color-btn-primary: #3498db;
+    --color-btn-danger: #e74c3c;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--color-bg);
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    line-height: 1;
+    font-size: 1.5rem;
+}
+
+.logo {
+    width: 70px;
+    height: auto;
+    display: block;
+}
+
+.header-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.header-link:hover {
+    opacity: 0.8;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: var(--color-primary);
+    color: var(--color-black);
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+}
+
+
+.admin-nav {
+    margin-top: 20px;
+}
+
+.admin-nav a {
+    display: block;
+    color: var(--color-black);
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+
+.admin-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.card {
+    background-color: var(--color-white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: var(--color-btn-primary);
+    color: var(--color-white);
+}
+
+.btn-danger {
+    background-color: var(--color-btn-danger);
+    color: var(--color-white);
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--color-white);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+}
+
+.table thead {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: var(--color-gray-light);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
