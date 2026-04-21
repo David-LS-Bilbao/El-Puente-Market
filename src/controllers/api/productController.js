@@ -1,5 +1,4 @@
-import { CategoryModel, ProductModel } from "../../models/index.js";
-import productServices from "../services/productServices.js";
+import productServices from "../../services/productServices.js";
 
 /**
  * Obtiene todos los productos almacenados en la base de datos.
@@ -32,6 +31,7 @@ async function getProductsByCategory(req, res) {
  * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve el producto creado.
  * @returns {Promise<void>}
  */
+
 async function addNewProduct(req, res) {
   const newProduct = await productServices.addNewProduct(req.body);
   res.json(newProduct);
@@ -47,8 +47,16 @@ async function addNewProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function changeProduct(req, res) {
-  const product = await productServices.updateProduct(req.params.id, req.body);
-  res.json(product);
+  try {
+    const product = await productServices.updateProduct(
+      req.params.id,
+      req.body,
+    );
+    res.json(product);
+  } catch (error) {
+    console.error("Error al actualizar el producto:", error);
+    res.status(500).json({ error: "Error al actualizar el producto" });
+  }
 }
 
 /**

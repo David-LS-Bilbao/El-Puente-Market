@@ -1,4 +1,4 @@
-import { CategoryModel, ProductModel } from "../../models/index.js";
+import { CategoryModel, ProductModel } from "../models/index.js";
 
 async function getAllProducts() {
   const products = await ProductModel.findAll();
@@ -14,7 +14,9 @@ async function getProductsByCategory(id) {
 }
 
 async function addNewProduct(productData) {
-  const newProduct = await ProductModel.create(productData);
+  const newProduct = await ProductModel.create(productData, {
+    include: [CategoryModel],
+  });
   return newProduct;
 }
 
