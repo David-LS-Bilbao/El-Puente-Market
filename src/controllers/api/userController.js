@@ -1,37 +1,53 @@
-import UserModel from "../../models/user.Model.js";
-
+import userService from "../../services/userService.js"
 
 async function getAllUsers(req, res) {
-    const user = await UserModel.findAll();
-    res.json(user);
+    try {
+        const user = await userService.getAllUsers();
+        res.json(user);
+    } catch (error) {
+        parseError(error, res);
+    }
 };
 
 async function getUserByDNI(req, res) {
-    const dni = req.params.dni;
-    const user = await UserModel.findByPk(dni);
-    res.json(user);
+    try {
+        const dni = req.params.dni;
+        const user = await userService.getUserByDNI(dni);
+        res.json(user);
+    } catch (error) {
+        parseError(error, res);
+    }
 }
 
 async function createUserRegister(req, res) {
-    const newUserRegister = await UserModel.create(req.body);
-    console.log("newUserRegister", newUserRegister)
-    res.json(newUserRegister);
+    try {
+        const user = await userService.createUserRegister(req.body);
+        res.json(user);
+    } catch (error) {
+        parseError(error, res);
+    }
+
 }
 
 async function updateUser(req, res) {
-    const dni = req.params.dni;
+    try {
+        const dni = req.params.dni;
+        const user = await userService.updateUser(dni, req.body);
+        res.json(user)
+    } catch (error) {
+        parseError(error, res);
+    }
 
-    const updatedUser = await UserModel.update(req.body, { where: { dni: dni } });
-    const user = await UserModel.findByPk(dni);
-
-    res.json(user)
 }
 
 async function deleteUser(req, res) {
-    const dni = req.params.dni;
-
-    const deletedUser = await UserModel.destroy({ where: { dni: dni } });
-    res.json(deletedUser);
+    try {
+        const dni = req.params.dni;
+        const user = await userService.deleteUser(dni);
+        res.json(user);
+    } catch (error) {
+        parseError(error, res);
+    }
 }
 
 export const functions = { getAllUsers, getUserByDNI, createUserRegister, updateUser, deleteUser };
