@@ -1,12 +1,15 @@
-import { CartModel, ProductModel, UserModel } from "../../models/index.js";
+import { CartModel } from "../../models/index.js";
+import {
+  getAllCartItems,
+  getCartItemById,
+  getCartItemsByUser,
+} from "../../services/cartService.js";
 
 const cartController = {
   async getAllCartItems(req, res) {
     try {
-      // Recupera todos los registros del carrito junto con el usuario y el producto asociados.
-      const cartItems = await CartModel.findAll({
-        include: [UserModel, ProductModel],
-      });
+      // Recupera todos los registros del carrito junto con sus relaciones.
+      const cartItems = await getAllCartItems();
 
       // Devuelve la colección completa al cliente.
       return res.status(200).json(cartItems);
@@ -23,9 +26,7 @@ const cartController = {
     try {
       const { id } = req.params;
 
-      const cartItem = await CartModel.findByPk(id, {
-        include: [UserModel, ProductModel],
-      });
+      const cartItem = await getCartItemById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -48,10 +49,7 @@ const cartController = {
       const { userDni } = req.params;
 
       // Busca solo los elementos del carrito que pertenecen al usuario indicado.
-      const cartItems = await CartModel.findAll({
-        where: { user_dni: userDni },
-        include: [UserModel, ProductModel],
-      });
+      const cartItems = await getCartItemsByUser(userDni);
 
       // Devuelve el carrito del usuario, aunque esté vacío.
       return res.status(200).json(cartItems);
@@ -145,9 +143,7 @@ const cartController = {
       await cartItem.update(fieldsToUpdate);
 
       // Relee el registro con includes para devolver la misma forma que en GET.
-      const updatedCartItem = await CartModel.findByPk(id, {
-        include: [UserModel, ProductModel],
-      });
+      const updatedCartItem = await getCartItemById(id);
 
       return res.status(200).json({
         message: "Elemento del carrito actualizado correctamente",
