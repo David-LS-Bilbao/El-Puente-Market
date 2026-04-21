@@ -3,6 +3,10 @@
     <header class="cart-page__header">
         <p class="cart-page__eyebrow">Vista de carrito</p>
         <h1>Carrito de <%= userDni %></h1>
+        <p class="cart-page__helper">
+            Acceso provisional sin autenticación. Esta vista carga el carrito del usuario
+            <strong><%= userDni %></strong>.
+        </p>
     </header>
 
     <% if (isEmpty) { %>
@@ -10,6 +14,7 @@
         <section class="cart-empty">
             <h2>Tu carrito está vacío</h2>
             <p>Añade productos para verlos reflejados aquí.</p>
+            <a href="/" class="cart-link-btn">Seguir comprando</a>
         </section>
     <% } else { %>
         <!-- Listado de lineas del carrito con datos basicos de cada producto -->
@@ -38,7 +43,7 @@
                             </div>
                         </dl>
 
-                        <!-- Accion minima de esta iteracion para eliminar una linea -->
+                        <!-- Accion minima para eliminar una linea -->
                         <form action="/carrito/<%= userDni %>/item/<%= item.id %>/delete" method="POST"
                             class="cart-item__actions">
                             <button type="submit" class="cart-item__delete-btn">Eliminar</button>
@@ -54,6 +59,7 @@
                 <span>Total general</span>
                 <strong><%= totalGeneralFormatted %></strong>
             </div>
+            <a href="/" class="cart-link-btn">Seguir comprando</a>
         </aside>
     <% } %>
 </section>
