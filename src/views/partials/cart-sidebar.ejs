@@ -1,0 +1,49 @@
+<div class="cart-sidebar">
+    <!-- Cabecera del panel lateral del carrito. -->
+    <div class="cart-sidebar__header">
+        <div>
+            <p class="cart-sidebar__eyebrow">Carrito</p>
+            <h2>Tu carrito</h2>
+        </div>
+        <button type="button" class="cart-sidebar__close" data-cart-sidebar-close aria-label="Cerrar carrito">
+            ×
+        </button>
+    </div>
+
+    <% if (isEmpty) { %>
+        <!-- Estado vacío cuando el usuario no tiene líneas en el carrito. -->
+        <section class="cart-sidebar__empty">
+            <h3>Tu carrito está vacío</h3>
+            <p>Añade productos para verlos reflejados aquí.</p>
+            <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
+        </section>
+    <% } else { %>
+        <!-- Listado resumido de productos cargado con datos reales desde la BBDD. -->
+        <div class="cart-sidebar__list" aria-label="Productos del carrito">
+            <% items.forEach((item) => { %>
+                <article class="cart-sidebar__item">
+                    <% if (item.productImage) { %>
+                        <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="cart-sidebar__image">
+                    <% } else { %>
+                        <div class="cart-sidebar__placeholder" aria-hidden="true">Sin imagen</div>
+                    <% } %>
+
+                    <div class="cart-sidebar__item-content">
+                        <h3><%= item.productName %></h3>
+                        <p>Cantidad: <strong><%= item.quantity %></strong></p>
+                        <p>Subtotal: <strong><%= item.subtotalFormatted %></strong></p>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+
+        <!-- Resumen final del carrito con el total calculado en servidor. -->
+        <div class="cart-sidebar__footer">
+            <div class="cart-sidebar__total">
+                <span>Total general</span>
+                <strong><%= totalGeneralFormatted %></strong>
+            </div>
+            <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
+        </div>
+    <% } %>
+</div>

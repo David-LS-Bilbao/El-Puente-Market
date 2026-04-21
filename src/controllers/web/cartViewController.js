@@ -15,49 +15,43 @@ function normalizeImagePath(imagePath) {
   return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
 }
 
+async function buildCartViewData(userDni) {
+  const cartItems = await CartModel.findAll({
+    where: { user_dni: userDni },
+    include: [ProductModel],
+  });
+
+  const items = cartItems.map((item) => ({
+    id: item.id,
+    quantity: item.quantity,
+    subtotal: Number(item.total_amount || 0),
+    subtotalFormatted: currencyFormatter.format(Number(item.total_amount || 0)),
+    productName: item.Product?.name || "Producto sin nombre",
+    productImage: normalizeImagePath(item.Product?.image),
+  }));
+
+  const totalGeneral = items.reduce((total, item) => total + item.subtotal, 0);
+
+  return {
+    userDni,
+    items,
+    isEmpty: items.length === 0,
+    totalGeneralFormatted: currencyFormatter.format(totalGeneral),
+  };
+}
+
 const cartViewController = {
-  async renderCartView(req, res) {
+  async renderCartSidebar(req, res) {
     try {
       const { userDni } = req.params;
+      const cartViewData = await buildCartViewData(userDni);
 
-      // Carga solo los items del usuario solicitado y trae el producto asociado
-      // para poder renderizar nombre e imagen directamente en la vista.
-      const cartItems = await CartModel.findAll({
-        where: { user_dni: userDni },
-        include: [ProductModel],
-      });
-
-      // Prepara una estructura de datos simple para el EJS y deja listos los
-      // importes formateados en servidor.
-      const items = cartItems.map((item) => ({
-        id: item.id,
-        quantity: item.quantity,
-        subtotal: Number(item.total_amount || 0),
-        subtotalFormatted: currencyFormatter.format(Number(item.total_amount || 0)),
-        productName: item.Product?.name || "Producto sin nombre",
-        productImage: normalizeImagePath(item.Product?.image),
-      }));
-
-      // Calcula el total del carrito en servidor para mantener la vista simple
-      // y sin dependencia de JavaScript en esta iteracion.
-      const totalGeneral = items.reduce((total, item) => total + item.subtotal, 0);
-
-      return res.render("pages/cart", {
-        layout: "layouts/main",
-        pageTitle: `Carrito | ${userDni}`,
-        pageStyle: "/css/cart.css",
-        userDni,
-        items,
-        isEmpty: items.length === 0,
-        totalGeneralFormatted: currencyFormatter.format(totalGeneral),
+      return res.render("partials/cart-sidebar", {
+        layout: false,
+        ...cartViewData,
       });
     } catch (error) {
-      return res.status(500).render("pages/error", {
-        layout: "layouts/main",
-        pageTitle: "Error | El Puente",
-        message: "No se pudo cargar la vista del carrito",
-        error,
-      });
+      return res.status(500).send("No se pudo cargar el sidebar del carrito");
     }
   },
 
@@ -80,7 +74,7 @@ const cartViewController = {
 
       await cartItem.destroy();
 
-      return res.redirect(`/carrito/${userDni}`);
+      return res.redirect("/");
     } catch (error) {
       return res.status(500).send("No se pudo eliminar la linea del carrito");
     }
