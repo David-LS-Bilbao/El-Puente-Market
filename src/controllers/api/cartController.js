@@ -1,8 +1,11 @@
-import { CartModel } from "../../models/index.js";
 import {
+  createCartItem,
+  deleteCartItem,
   getAllCartItems,
   getCartItemById,
+  getCartItemRecordById,
   getCartItemsByUser,
+  updateCartItem,
 } from "../../services/cartService.js";
 
 const cartController = {
@@ -82,7 +85,7 @@ const cartController = {
       }
 
       // Persiste el item solo cuando las referencias y valores ya son consistentes.
-      const newCartItem = await CartModel.create({
+      const newCartItem = await createCartItem({
         user_dni,
         product_id,
         quantity,
@@ -116,7 +119,7 @@ const cartController = {
         updated_at,
       } = requestBody;
 
-      const cartItem = await CartModel.findByPk(id);
+      const cartItem = await getCartItemRecordById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -140,7 +143,7 @@ const cartController = {
 
       fieldsToUpdate.updated_at = updated_at || new Date();
 
-      await cartItem.update(fieldsToUpdate);
+      await updateCartItem(id, fieldsToUpdate);
 
       // Relee el registro con includes para devolver la misma forma que en GET.
       const updatedCartItem = await getCartItemById(id);
@@ -163,9 +166,7 @@ const cartController = {
       const { id } = req.params;
 
       // Elimina el registro que coincide con la clave primaria del carrito.
-      const deletedRows = await CartModel.destroy({
-        where: { id },
-      });
+      const deletedRows = await deleteCartItem(id);
 
       // Si no se eliminó ninguna fila, el recurso no existía.
       if (!deletedRows) {
