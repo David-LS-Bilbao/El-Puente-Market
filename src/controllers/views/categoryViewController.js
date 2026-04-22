@@ -1,7 +1,7 @@
 import categoryService from '../../services/categoryService.js'
 async function getAllCategory( req, res) {
     const category = await categoryService.getAllCategory();
-    res.json(category);
+    res.render("pages/index", { category, layout: "layouts/main"});
 };
 
 async function getCategoryById(req, res) {

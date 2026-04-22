@@ -9,7 +9,7 @@ import productServices from "../../services/productServices.js";
  */
 async function getAllProducts(req, res) {
   const products = await productServices.getAllProducts();
-  res.json(products);
+  res.render("pages/index", { products, layout: "layouts/main" });
 }
 
 /**
@@ -31,7 +31,6 @@ async function getProductsByCategory(req, res) {
  * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve el producto creado.
  * @returns {Promise<void>}
  */
-
 async function addNewProduct(req, res) {
   const newProduct = await productServices.addNewProduct(req.body);
   res.json(newProduct);
@@ -47,16 +46,8 @@ async function addNewProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function changeProduct(req, res) {
-  try {
-    const product = await productServices.updateProduct(
-      req.params.id,
-      req.body,
-    );
-    res.json(product);
-  } catch (error) {
-    console.error("Error al actualizar el producto:", error);
-    res.status(500).json({ error: "Error al actualizar el producto" });
-  }
+  const product = await productServices.updateProduct(req.params.id, req.body);
+  res.json(product);
 }
 
 /**
@@ -82,7 +73,6 @@ async function changeProductField(req, res) {
  */
 async function deleteProduct(req, res) {
   const product = await productServices.deleteProduct(req.params.id);
-  res.json(product);
 }
 
 export const functions = {

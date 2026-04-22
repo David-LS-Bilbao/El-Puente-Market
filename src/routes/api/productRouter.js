@@ -10,7 +10,7 @@ productRouter.get("/category/:id", productMiddlewares.checkProductId, functions.
 
 productRouter.post("/", productMiddlewares.checkNewProduct, functions.addNewProduct);
 productRouter.put("/:id", productMiddlewares.checkProductId, productMiddlewares.checkProduct, functions.changeProduct);
-productRouter.patch("/:id", productMiddlewares.checkProductId, productMiddlewares.checkProductField, functions.changeProductField);
+productRouter.patch("/:id", productMiddlewares.checkProductId, functions.changeProductField);
 productRouter.delete("/:id", productMiddlewares.checkProductId, functions.deleteProduct);
 
 export default productRouter;

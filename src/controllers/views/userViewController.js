@@ -1,12 +1,8 @@
-import userService from "../../services/userService.js"
+import userService from '../../services/userService.js'
 
 async function getAllUsers(req, res) {
-    try {
-        const user = await userService.getAllUsers();
-        res.json(user);
-    } catch (error) {
-        parseError(error, res);
-    }
+    const users = await userService.getAllUsers();
+    res.render("dashboard/index", { users, layout: "layouts/dashboard" });
 };
 
 async function getUserByDNI(req, res) {

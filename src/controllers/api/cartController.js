@@ -1,12 +1,18 @@
-import { CartModel, ProductModel, UserModel } from "../../models/index.js";
+import {
+  createCartItem,
+  deleteCartItem,
+  getAllCartItems,
+  getCartItemById,
+  getCartItemRecordById,
+  getCartItemsByUser,
+  updateCartItem,
+} from "../../services/cartService.js";
 
 const cartController = {
   async getAllCartItems(req, res) {
     try {
-      // Recupera todos los registros del carrito junto con el usuario y el producto asociados.
-      const cartItems = await CartModel.findAll({
-        include: [UserModel, ProductModel],
-      });
+      // Recupera todos los registros del carrito junto con sus relaciones.
+      const cartItems = await getAllCartItems();
 
       // Devuelve la colección completa al cliente.
       return res.status(200).json(cartItems);
@@ -23,9 +29,7 @@ const cartController = {
     try {
       const { id } = req.params;
 
-      const cartItem = await CartModel.findByPk(id, {
-        include: [UserModel, ProductModel],
-      });
+      const cartItem = await getCartItemById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -48,10 +52,7 @@ const cartController = {
       const { userDni } = req.params;
 
       // Busca solo los elementos del carrito que pertenecen al usuario indicado.
-      const cartItems = await CartModel.findAll({
-        where: { user_dni: userDni },
-        include: [UserModel, ProductModel],
-      });
+      const cartItems = await getCartItemsByUser(userDni);
 
       // Devuelve el carrito del usuario, aunque esté vacío.
       return res.status(200).json(cartItems);
@@ -84,7 +85,7 @@ const cartController = {
       }
 
       // Persiste el item solo cuando las referencias y valores ya son consistentes.
-      const newCartItem = await CartModel.create({
+      const newCartItem = await createCartItem({
         user_dni,
         product_id,
         quantity,
@@ -108,17 +109,11 @@ const cartController = {
   async updateCartItem(req, res) {
     try {
       const { id } = req.params;
-      // Permite responder 400 si el cliente no ha enviado datos actualizables.
       const requestBody = req.body ?? {};
-      const {
-        user_dni,
-        product_id,
-        quantity,
-        total_amount,
-        updated_at,
-      } = requestBody;
+      // total_amount nunca viene del cliente: se recalcula desde el producto real.
+      const { user_dni, product_id, quantity } = requestBody;
 
-      const cartItem = await CartModel.findByPk(id);
+      const cartItem = await getCartItemRecordById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -126,25 +121,35 @@ const cartController = {
         });
       }
 
-      // Construye un patch parcial para no sobrescribir campos ausentes.
       const fieldsToUpdate = {};
 
+      // comprovacion de usuario.
       if (user_dni !== undefined) fieldsToUpdate.user_dni = user_dni;
       if (product_id !== undefined) fieldsToUpdate.product_id = product_id;
       if (quantity !== undefined) fieldsToUpdate.quantity = quantity;
-      if (total_amount !== undefined) fieldsToUpdate.total_amount = total_amount;
 
-      if (!Object.keys(fieldsToUpdate).length && updated_at === undefined) {
+      if (!Object.keys(fieldsToUpdate).length) {
         return res.status(400).json({
           message: "Debes enviar al menos un campo para actualizar el carrito",
         });
       }
 
-      fieldsToUpdate.updated_at = updated_at || new Date();
+      // Recalcula total_amount desde el precio real del producto en BD.
+      const effectiveProductId = fieldsToUpdate.product_id ?? cartItem.product_id;
+      const effectiveQuantity = fieldsToUpdate.quantity ?? cartItem.quantity;
+      const product = await ProductModel.findByPk(effectiveProductId);
+      if (!product) {
+        return res.status(400).json({ message: "Producto no encontrado" });
+      }
+      const unitPrice =
+        product.on_discount && product.price_discount != null
+          ? Number(product.price_discount)
+          : Number(product.price);
+      fieldsToUpdate.total_amount = (unitPrice * effectiveQuantity).toFixed(2);
+      fieldsToUpdate.updated_at = new Date();
 
-      await cartItem.update(fieldsToUpdate);
+      await updateCartItem(id, fieldsToUpdate);
 
-      // Relee el registro con includes para devolver la misma forma que en GET.
       const updatedCartItem = await CartModel.findByPk(id, {
         include: [UserModel, ProductModel],
       });
@@ -167,9 +172,7 @@ const cartController = {
       const { id } = req.params;
 
       // Elimina el registro que coincide con la clave primaria del carrito.
-      const deletedRows = await CartModel.destroy({
-        where: { id },
-      });
+      const deletedRows = await deleteCartItem(id);
 
       // Si no se eliminó ninguna fila, el recurso no existía.
       if (!deletedRows) {
