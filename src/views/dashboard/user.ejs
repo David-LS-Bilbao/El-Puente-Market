@@ -25,7 +25,9 @@
             <% users.forEach(user=> { %>
                 <tr>
                     <td>
-                        <%= user.dni %>
+                        <a href="/admin/user/details/<%= user.dni %>">
+                            <%= user.dni %>
+                        </a>
                     </td>
                     <td>
                         <%= user.username %>
@@ -45,11 +47,11 @@
                     </td>
 
                     <td>
-                        <a href="/admin/editUser/<%= user.dni %>" class="btn btn-warning">
+                        <a href="/admin/user/edit/<%= user.dni %>" class="btn btn-warning">
                             Editar
                         </a>
 
-                        <form action="/admin/users/delete/<%= user.dni %>" method="POST" style="display:inline;">
+                        <form action="/admin/user/delete/<%= user.dni %>" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-danger">
                                 Eliminar
                             </button>
