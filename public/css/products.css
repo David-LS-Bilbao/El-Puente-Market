@@ -151,3 +151,15 @@
 .text-link:hover {
   color: #007bff; /* O el color corporativo de tu web */
 }
+
+.product-link {
+  text-decoration: none;
+  color: inherit; /* Mantiene el color original del texto */
+  display: block;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
