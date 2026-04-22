@@ -2,14 +2,15 @@ import userService from '../../services/userService.js'
 
 async function getAllUsers(req, res) {
     const users = await userService.getAllUsers();
-    res.render("dashboard/index", { users, layout: "layouts/dashboard" });
+    res.render("dashboard/user", { users, layout: "layouts/dashboard" });
 };
 
 async function getUserByDNI(req, res) {
     try {
         const dni = req.params.dni;
         const user = await userService.getUserByDNI(dni);
-        res.json(user);
+        res.render("", { user, layout: "layouts/dashboard" });
+
     } catch (error) {
         parseError(error, res);
     }
@@ -18,7 +19,8 @@ async function getUserByDNI(req, res) {
 async function createUserRegister(req, res) {
     try {
         const user = await userService.createUserRegister(req.body);
-        res.json(user);
+        res.render("dashboard/createUser", { user, layout: "layouts/dashboard" });
+
     } catch (error) {
         parseError(error, res);
     }
@@ -29,7 +31,8 @@ async function updateUser(req, res) {
     try {
         const dni = req.params.dni;
         const user = await userService.updateUser(dni, req.body);
-        res.json(user)
+        res.render("dashboard/editUser", { user, layout: "layouts/dashboard" });
+
     } catch (error) {
         parseError(error, res);
     }
@@ -45,6 +48,11 @@ async function deleteUser(req, res) {
         parseError(error, res);
     }
 }
+async function getViewCreateUser(req, res) {
+    res.render('dashboard/createUser', {
+        layout: 'layouts/dashboard'
+    });
+}
 
-export const functions = { getAllUsers, getUserByDNI, createUserRegister, updateUser, deleteUser };
+export const functions = { getAllUsers, getUserByDNI, createUserRegister, updateUser, deleteUser, getViewCreateUser };
 export default functions;

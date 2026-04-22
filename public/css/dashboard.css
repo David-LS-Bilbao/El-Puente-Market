@@ -1,6 +1,6 @@
 :root {
     --color-primary: #FBB118;
-    --color-secondary: #2c3e50;
+    --color-secondary: #1a1a1a;
     --color-bg: #f4f6f9;
     --color-white: #ffffff;
     --color-black: #000000;
@@ -9,6 +9,7 @@
 
     --color-btn-primary: #3498db;
     --color-btn-danger: #e74c3c;
+    --color-btn-warning: #ffc107;
 }
 
 body {
@@ -118,6 +119,11 @@ h1 {
 .btn-danger {
     background-color: var(--color-btn-danger);
     color: var(--color-white);
+}
+
+.btn-warning {
+    background-color: var(--color-btn-warning);
+    color: var(--color-black);
 }
 
 .btn:hover {
