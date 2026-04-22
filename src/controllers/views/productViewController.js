@@ -1,4 +1,4 @@
-import { CategoryModel, ProductModel } from "../../models/index.js";
+import productServices from "../../services/productServices.js";
 
 /**
  * Obtiene todos los productos almacenados en la base de datos.
@@ -8,7 +8,7 @@ import { CategoryModel, ProductModel } from "../../models/index.js";
  * @returns {Promise<void>}
  */
 async function getAllProducts(req, res) {
-  const products = await ProductModel.findAll({ include: [CategoryModel] });
+  const products = await productServices.getAllProducts();
   res.render("pages/index", { products, layout: "layouts/main" });
 }
 
@@ -20,10 +20,7 @@ async function getAllProducts(req, res) {
  * @returns {Promise<void>}
  */
 async function getProductsByCategory(req, res) {
-  const products = await ProductModel.findAll({
-    where: { id_category: req.params.id },
-    include: [CategoryModel],
-  });
+  const products = await productServices.getProductsByCategory(req.params.id);
   res.json(products);
 }
 
@@ -35,7 +32,7 @@ async function getProductsByCategory(req, res) {
  * @returns {Promise<void>}
  */
 async function addNewProduct(req, res) {
-  const newProduct = await ProductModel.create(req.body);
+  const newProduct = await productServices.addNewProduct(req.body);
   res.json(newProduct);
 }
 
@@ -49,10 +46,7 @@ async function addNewProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function changeProduct(req, res) {
-  const product = await ProductModel.update(req.body, {
-    where: { id: req.params.id },
-    returning: true,
-  });
+  const product = await productServices.updateProduct(req.params.id, req.body);
   res.json(product);
 }
 
@@ -78,7 +72,7 @@ async function changeProductField(req, res) {
  * @returns {Promise<void>}
  */
 async function deleteProduct(req, res) {
-  const product = await ProductModel.destroy({ where: { id: req.params.id } });
+  const product = await productServices.deleteProduct(req.params.id);
 }
 
 export const functions = {
