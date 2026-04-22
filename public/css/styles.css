@@ -42,6 +42,26 @@ body {
     gap: 15px;
 }
 
+.user-session {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-session__label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.user-session__select {
+    min-width: 220px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 8px;
+    background-color: #fff8e1;
+    color: #111827;
+}
+
 /* ICONOS */
 .icon {
     width: 30px;
@@ -84,6 +104,27 @@ body {
     padding: 20px;
 }
 
+@media (max-width: 640px) {
+    .header-top {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .user-session {
+        flex: 1;
+    }
+
+    .user-session__select {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
 /* FOOTER */
 .footer {
     background-color: #FBB118;
@@ -92,4 +133,3 @@ body {
     padding: 15px;
     margin-top: 20px;
 }
-

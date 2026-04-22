@@ -4,8 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const content = document.querySelector("[data-cart-sidebar-content]");
 
   if (!trigger || !shell || !content) return;
-
-  const userDni = trigger.dataset.cartSidebarUserDni;
+  const getUserDni = () => trigger.dataset.cartSidebarUserDni?.trim() || "";
 
   const currency = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -13,8 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const loadContent = async ({ showLoading = false } = {}) => {
+    const userDni = getUserDni();
     const panel = shell.querySelector(".cart-sidebar-shell__panel");
     const prevScroll = panel ? panel.scrollTop : 0;
+
+    if (!userDni) {
+      content.innerHTML =
+        '<section class="cart-sidebar__empty"><h3>Selecciona un usuario</h3><p>Elige un usuario en la cabecera para ver su carrito.</p><button type="button" class="cart-link-btn" data-cart-sidebar-close>Cerrar</button></section>';
+      return;
+    }
+
     if (showLoading) {
       content.innerHTML = '<p class="cart-sidebar__loading">Cargando carrito...</p>';
     }
@@ -78,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Botón de checkout: está fuera de los ítems, se maneja aparte
     if (btn.dataset.action === "checkout") {
+      const userDni = getUserDni();
       window.location.href = userDni ? "/checkout" : "/login";
       return;
     }
@@ -88,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemId = item.dataset.itemId;
     const action = btn.dataset.action;
     const quantity = parseInt(item.dataset.quantity, 10);
+    btn.disabled = true;
 
     if (action === "plus") {
       // Actualización optimista: el usuario ve el cambio al instante
@@ -105,8 +114,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (res.ok) {
           const { data } = await res.json();
           updateItemDOM(item, data.quantity, parseFloat(data.total_amount));
+        } else {
+          await loadContent();
         }
-      } catch { /* mantiene valor optimista si falla */ }
+      } catch {
+        await loadContent();
+      } finally {
+        btn.disabled = false;
+      }
       return;
     }
 
@@ -126,18 +141,39 @@ document.addEventListener("DOMContentLoaded", () => {
           if (res.ok) {
             const { data } = await res.json();
             updateItemDOM(item, data.quantity, parseFloat(data.total_amount));
+          } else {
+            await loadContent();
           }
-        } catch { /* mantiene valor optimista si falla */ }
+        } catch {
+          await loadContent();
+        } finally {
+          btn.disabled = false;
+        }
       } else {
-        await fetch(`/api/cart/${itemId}`, { method: "DELETE" });
-        await loadContent();
+        try {
+          const res = await fetch(`/api/cart/${itemId}`, { method: "DELETE" });
+          await loadContent();
+          if (!res.ok) return;
+        } finally {
+          btn.disabled = false;
+        }
       }
       return;
     }
 
     if (action === "delete") {
-      await fetch(`/api/cart/${itemId}`, { method: "DELETE" });
-      await loadContent();
+      try {
+        await fetch(`/api/cart/${itemId}`, { method: "DELETE" });
+        await loadContent();
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  });
+
+  window.addEventListener("user-session-change", () => {
+    if (shell.classList.contains("cart-sidebar-shell--open")) {
+      loadContent({ showLoading: true });
     }
   });
 });
