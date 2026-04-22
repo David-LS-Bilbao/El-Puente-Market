@@ -1,0 +1,40 @@
+<main class="product-container">
+    <div class="product-layout">
+        
+        <section class="product-image">
+            <img src="/images/<%= product.image %>" alt="<%= product.name %>">
+        </section>
+
+        <section class="product-info">
+            <h1 class="product-title"><%= product.name %></h1>
+            
+            <div class="price-section">
+                <% if (product.on_discount && product.price_discount) { %>
+                    <span class="old-price"><%= product.price %>€</span>
+                    <span class="current-price discount"><%= product.price_discount %>€</span>
+                    <span class="badge">¡Oferta!</span>
+                <% } else { %>
+                    <span class="current-price"><%= product.price %>€</span>
+                <% } %>
+            </div>
+
+            <p class="description">
+                <%= product.description %>
+            </p>
+
+            <div class="stock-status">
+                <% if (product.stock > 0) { %>
+                    <p class="in-stock">En stock: <strong><%= product.stock %></strong> unidades disponibles</p>
+                    <form action="/cart/add" method="POST">
+                        <input type="hidden" name="productId" value="<%= product.id %>">
+                        <button type="submit" class="btn-buy">Añadir al carrito</button>
+                    </form>
+                <% } else { %>
+                    <p class="out-of-stock">Agotado temporalmente</p>
+                    <button class="btn-disabled" disabled>Sin existencias</button>
+                <% } %>
+            </div>
+        </section>
+
+    </div>
+</main>
