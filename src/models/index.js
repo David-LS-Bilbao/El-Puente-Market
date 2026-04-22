@@ -24,3 +24,6 @@ UserModel.hasMany(CartModel, { foreignKey: "user_dni" });
 ProductModel.hasMany(CartModel, { foreignKey: "product_id" });
 
 export { CartModel, CategoryModel, ProductModel, UserModel };
+
+
+
