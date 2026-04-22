@@ -1,4 +1,5 @@
 import { CartModel, ProductModel } from "../../models/index.js";
+import cartService from '../../services/cartService.js'
 
 const currencyFormatter = new Intl.NumberFormat("es-ES", {
   style: "currency",
@@ -39,47 +40,51 @@ async function buildCartViewData(userDni) {
     isEmpty: items.length === 0,
     totalGeneralFormatted: currencyFormatter.format(totalGeneral),
   };
-}
-
-const cartViewController = {
-  async renderCartSidebar(req, res) {
-    try {
-      const { userDni } = req.params;
-      const cartViewData = await buildCartViewData(userDni);
-
-      return res.render("partials/cart-sidebar", {
-        layout: false,
-        ...cartViewData,
-      });
-    } catch (error) {
-      return res.status(500).send("No se pudo cargar el sidebar del carrito");
-    }
-  },
-
-  async deleteCartItemAndRedirect(req, res) {
-    try {
-      const { userDni, id } = req.params;
-
-      // Limita el borrado al carrito del usuario indicado en la URL para no
-      // eliminar una linea ajena por error.
-      const cartItem = await CartModel.findOne({
-        where: {
-          id,
-          user_dni: userDni,
-        },
-      });
-
-      if (!cartItem) {
-        return res.status(404).send("No se encontró la linea del carrito");
-      }
-
-      await cartItem.destroy();
-
-      return res.redirect("/");
-    } catch (error) {
-      return res.status(500).send("No se pudo eliminar la linea del carrito");
-    }
-  },
 };
 
+async function renderCartSidebar(req, res) {
+  try {
+    const { userDni } = req.params;
+    const cartViewData = await buildCartViewData(userDni);
+
+    return res.render("partials/cart-sidebar", {
+      layout: false,
+      ...cartViewData,
+    });
+  } catch (error) {
+    return res.status(500).send("No se pudo cargar el sidebar del carrito");
+  }
+};
+
+async function deleteCartItemAndRedirect(req, res) {
+  try {
+    const { userDni, id } = req.params;
+
+    // Limita el borrado al carrito del usuario indicado en la URL para no
+    // eliminar una linea ajena por error.
+    const cartItem = await CartModel.findOne({
+      where: {
+        id,
+        user_dni: userDni,
+      },
+    });
+
+    if (!cartItem) {
+      return res.status(404).send("No se encontró la linea del carrito");
+    }
+
+    await cartItem.destroy();
+
+    return res.redirect("/");
+  } catch (error) {
+    return res.status(500).send("No se pudo eliminar la linea del carrito");
+  }
+};
+
+async function createCartItem(req, res) {
+  const users = await cartService.createCartItem(req.body);
+  res.render("pages/index", { users, layout: "layouts/main" });
+};
+
+export const cartViewController = { buildCartViewData, renderCartSidebar, deleteCartItemAndRedirect, createCartItem };
 export default cartViewController;
