@@ -1,16 +1,17 @@
 # El Puente Market
 
-Backend en Node.js + Express + Sequelize para el proyecto **El Puente Market**, orientado a un e-commerce de supermercado con PostgreSQL como base de datos.
+Aplicacion backend para un supermercado online desarrollada con Node.js, Express, Sequelize y PostgreSQL.
 
-## Estado actual
+El proyecto expone una API REST para gestionar categorias, productos, usuarios y carrito, y sirve como base tecnica para la integracion de las distintas features del equipo.
 
-El proyecto dispone actualmente de una base backend funcional con:
+## Objetivo
 
-- servidor Express operativo
-- conexión a PostgreSQL
-- Sequelize configurado y sincronizando modelos
-- endpoint funcional de categorías
-- feature inicial de `cart` operativa
+El objetivo de la aplicacion es centralizar la logica de negocio principal de un e-commerce de supermercado:
+
+- gestion de categorias y productos
+- gestion de usuarios
+- gestion del carrito de compra
+- conexion con una base de datos PostgreSQL mediante Sequelize
 
 ## Stack principal
 
@@ -20,19 +21,6 @@ El proyecto dispone actualmente de una base backend funcional con:
 - Sequelize
 - dotenv
 - nodemon
-
-## Estructura relevante
-
-```text
-src/
-  config/
-  controllers/
-    api/
-  models/
-  routes/
-    api/
-docs/
-```
 
 ## Puesta en marcha
 
@@ -44,18 +32,18 @@ npm install
 
 ### 2. Configurar variables de entorno
 
-Usa `.env` tomando como referencia `.env.example`.
+Usar `.env` tomando como referencia `.env.example`.
 
-Verifica al menos:
+Variables minimas:
 
-- `PORT`
 - `DB_NAME`
 - `DB_USER`
 - `DB_PASSWORD`
 - `DB_HOST`
 - `DB_PORT`
+- `PORT`
 
-## Arranque del proyecto
+### 3. Arrancar la aplicacion
 
 Modo desarrollo:
 
@@ -75,54 +63,50 @@ Servidor por defecto:
 http://localhost:3000
 ```
 
-## Endpoints disponibles
+## Estructura general
 
-### Categorías
-
-- `GET /api/category`
-
-### Cart
-
-- `GET /api/cart`
-- `GET /api/cart/user/:userDni`
-- `POST /api/cart`
-- `DELETE /api/cart/:id`
-
-## Ejemplo de body para crear un elemento en cart
-
-```json
-{
-  "user_dni": "12345678A",
-  "product_id": 2,
-  "quantity": 3,
-  "total_amount": 2.97
-}
+```text
+src/
+  config/
+  controllers/
+    api/
+  middlewares/
+  models/
+  routes/
+    api/
+  services/
+docs/
 ```
 
-## Esquema actual de `cart`
+## Documentacion
 
-La tabla `cart` trabaja actualmente con estas columnas:
+Documentacion funcional y tecnica principal:
 
-- `id`
-- `user_dni`
-- `product_id`
-- `quantity`
-- `updated_at`
-- `total_amount`
-- `created_at`
+- [Resumen del proyecto](docs/00-resumen-proyecto.md)
+- [Requisitos y casos de uso](docs/01-requisitos-y-casos-de-uso.md)
+- [Arquitectura de la aplicacion](docs/02-arquitectura-aplicacion.md)
+- [Modelo de datos](docs/03-modelo-datos.md)
+- [API REST](docs/04-api.md)
+- [Pruebas y validacion](docs/05-pruebas-y-validacion.md)
+- [Decisiones tecnicas](docs/06-decisiones-tecnicas.md)
 
-## Validación funcional realizada
+Documentacion interna de apoyo:
 
-Se ha validado manualmente que:
+- [Integracion de ramas](docs/integracion_ramas.md)
+- [Evidencias historicas](docs/evidencias.md)
 
-- `GET /api/category` responde correctamente
-- `GET /api/cart` responde `200 OK`
-- `GET /api/cart/user/:userDni` responde `200 OK`
-- `POST /api/cart` responde `201 Created`
-- `DELETE /api/cart/:id` funciona usando el `id` real de la fila del carrito
+## Estado actual
 
-## Notas
+El proyecto dispone de:
 
-- El proyecto no dispone todavía de scripts de `test` ni `lint`
-- La documentación funcional complementaria se está registrando en `docs/`
-- La feature `cart` está integrada con `CartModel`, `UserModel` y `ProductModel`
+- conexion operativa con PostgreSQL
+- sincronizacion de modelos con Sequelize
+- API REST de categorias
+- API REST de productos
+- API REST de usuarios
+- API REST de carrito
+
+## Observaciones
+
+- El proyecto no define actualmente scripts de `test` ni `lint` en `package.json`.
+- La sincronizacion del esquema se realiza mediante `sequelize.sync({ alter: true })`, por lo que conviene usarla con cuidado en entornos compartidos.
