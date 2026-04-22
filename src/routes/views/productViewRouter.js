@@ -6,6 +6,7 @@ const productViewRouter = Router();
 
 productViewRouter.get("/", functions.getAllProducts);
 productViewRouter.get("/category/:id", productMiddlewares.checkProductId, functions.getProductsByCategory);
+productViewRouter.get("/:id", functions.getProductById);
 
 productViewRouter.post("/", productMiddlewares.checkNewProduct, functions.addNewProduct);
 productViewRouter.put("/:id", productMiddlewares.checkProductId, productMiddlewares.checkProduct, functions.changeProduct);

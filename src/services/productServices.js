@@ -13,6 +13,13 @@ async function getProductsByCategory(id) {
   return products;
 }
 
+async function getProductById(id) {
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
+  return product;
+}
+
 async function addNewProduct(productData) {
   const newProduct = await ProductModel.create(productData, {
     include: [CategoryModel],
@@ -36,6 +43,7 @@ async function deleteProduct(id) {
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   updateProduct,
   deleteProduct,
