@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/productDetails.css"/>
 <main class="product-container">
     <div class="product-layout">
         
@@ -22,18 +23,21 @@
                 <%= product.description %>
             </p>
 
-            <div class="stock-status">
-                <% if (product.stock > 0) { %>
-                    <p class="in-stock">En stock: <strong><%= product.stock %></strong> unidades disponibles</p>
-                    <form action="/cart/add" method="POST">
-                        <input type="hidden" name="productId" value="<%= product.id %>">
-                        <button type="submit" class="btn-buy">Añadir al carrito</button>
-                    </form>
-                <% } else { %>
-                    <p class="out-of-stock">Agotado temporalmente</p>
-                    <button class="btn-disabled" disabled>Sin existencias</button>
-                <% } %>
-            </div>
+            <div class="purchase-section">
+    <% if (product.stock > 0) { %>
+        <p class="stock-status in-stock">
+            En stock: <strong><%= product.stock %> unidades disponibles</strong>
+        </p>
+        
+        <form action="/cart/add" method="POST" class="add-to-cart-form">
+            <input type="hidden" name="productId" value="<%= product.id %>">
+            <button type="submit" class="btn-buy">Añadir al carrito</button>
+        </form>
+    <% } else { %>
+        <p class="stock-status out-of-stock">Agotado temporalmente</p>
+        <button class="btn-disabled" disabled>Sin existencias</button>
+    <% } %>
+</div>
         </section>
 
     </div>
