@@ -1,63 +1,50 @@
-/* Contenedor Principal */
+/* VARIABLES PARA CONSISTENCIA */
+:root {
+  --primary: #fbb118;
+  --primary-dark: #e5a016;
+  --text-main: #2d2d2d;
+  --text-muted: #777;
+  --bg-body: #f8f9fa;
+  --white: #ffffff;
+  --radius: 12px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* CONTENEDOR PRINCIPAL */
 .product-container {
   max-width: 1100px;
   margin: 40px auto;
   padding: 0 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
 }
 
-.back-nav {
-  margin-bottom: 20px;
-}
-
-.back-link {
-  text-decoration: none;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.back-link:hover {
-  color: #000;
-}
-
-/* Layout de dos columnas */
+/* LAYOUT DE DOS COLUMNAS */
 .product-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+  background: var(--white);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  align-items: start;
 }
 
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-  .product-layout {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
+/* IMAGEN */
+.product-image img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: #fdfdfd;
 }
 
-/* Imagen */
-.product-image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.main-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Información del producto */
+/* INFORMACIÓN DEL PRODUCTO */
 .product-title {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
+  font-weight: 800;
   margin-bottom: 15px;
-  color: #333;
+  line-height: 1.2;
 }
 
 .price-section {
@@ -68,171 +55,99 @@
 }
 
 .current-price {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.current-price.discount {
+  color: #e74c3c;
 }
 
 .old-price {
-  font-size: 1.3rem;
-  color: #999;
+  font-size: 1.2rem;
+  color: var(--text-muted);
   text-decoration: line-through;
 }
 
 .badge {
   background: #e74c3c;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 20px;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 50px;
   font-size: 0.8rem;
   font-weight: bold;
-}
-
-.divider {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin: 20px 0;
-}
-
-.description-section h3 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .description {
-  line-height: 1.6;
-  color: #666;
+  line-height: 1.7;
+  color: var(--text-muted);
   margin-bottom: 30px;
+  font-size: 1.05rem;
 }
 
-/* Sección de compra y Stock */
+/* SECCIÓN DE COMPRA */
+.purchase-section {
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+}
+
 .stock-status {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 500;
-  margin-bottom: 20px;
 }
 
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.stock-status.in-stock {
+  color: #27ae60;
 }
 
-.in-stock .status-dot {
-  background: #27ae60;
-}
-.out-of-stock .status-dot {
-  background: #e74c3c;
+.stock-status.out-of-stock {
+  color: #e74c3c;
 }
 
-.add-to-cart-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.qty-selector input {
-  width: 60px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-left: 10px;
+/* BOTONES */
+.btn-buy,
+.btn-disabled {
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-buy {
-  background: #27ae60;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
+  background-color: var(--primary);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(251, 177, 24, 0.3);
 }
 
 .btn-buy:hover {
-  background: #219150;
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(251, 177, 24, 0.4);
 }
 
 .btn-disabled {
-  background: #ccc;
-  color: #666;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 6px;
-  width: 100%;
-}
-/* ... (resto del código anterior igual) ... */
-
-/* Sección de compra mejorada */
-.purchase-section {
-  display: flex;
-  justify-content: space-between; /* Alinea stock a la izquierda y botón a la derecha */
-  align-items: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-  flex-wrap: wrap; /* Para que en móviles se apile uno sobre otro */
-  gap: 20px;
+  background-color: #eee;
+  color: #aaa;
+  cursor: not-allowed;
 }
 
-.stock-status {
-  margin-bottom: 0; /* Eliminamos el margen inferior para alinear con el botón */
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.stock-status strong {
-  font-weight: 700;
-}
-
-/* Botón Corporativo #FBB118 */
-.btn-buy {
-  background-color: #fbb118;
-  color: #000; /* Texto negro para mejor contraste con el amarillo */
-  border: none;
-  padding: 12px 35px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px; /* Estilo redondeado suave */
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.btn-buy:hover {
-  background-color: #e29e12; /* Un tono un poco más oscuro al pasar el ratón */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.btn-buy:active {
-  transform: translateY(0);
-}
-
-/* Ajustes para el formulario */
-.add-to-cart-form {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* Responsive: En pantallas pequeñas el botón ocupa todo el ancho */
-@media (max-width: 600px) {
-  .purchase-section {
-    flex-direction: column;
-    align-items: flex-start;
+/* RESPONSIVE */
+@media (max-width: 850px) {
+  .product-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 20px;
   }
 
-  .btn-buy,
-  .add-to-cart-form {
-    width: 100%;
-  }
-
-  .btn-buy {
-    padding: 15px;
+  .product-title {
+    font-size: 1.8rem;
   }
 }
