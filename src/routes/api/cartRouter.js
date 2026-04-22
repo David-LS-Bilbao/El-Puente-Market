@@ -1,9 +1,9 @@
 import { Router } from "express";
-import cartController from "../controllers/api/cartController.js";
+import cartController from "../../controllers/api/cartController.js";
 
 const cartRouter = Router();
 
-// Expone las operaciones basicas del recurso carrito.
+//  operaciones basicas del carrito.
 cartRouter.get("/", cartController.getAllCartItems);
 cartRouter.get("/user/:userDni", cartController.getCartByUser);
 cartRouter.get("/:id", cartController.getCartItemById);
