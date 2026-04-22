@@ -35,13 +35,7 @@ async function getCartItemRecordById(id) {
 // Aplica un patch parcial sobre un item existente del carrito.
 async function updateCartItem(id, fieldsToUpdate) {
   const cartItem = await getCartItemRecordById(id);
-
-  if (!cartItem) {
-    return null;
-  }
-
-  await cartItem.update(fieldsToUpdate);
-  return cartItem;
+  return cartItem.update(fieldsToUpdate);
 }
 
 // Elimina un item por id y devuelve cuántas filas se han borrado.
@@ -51,7 +45,7 @@ async function deleteCartItem(id) {
   });
 }
 
-export {
+export const functions = {
   createCartItem,
   deleteCartItem,
   getAllCartItems,
@@ -60,3 +54,5 @@ export {
   getCartItemsByUser,
   updateCartItem,
 };
+
+export default functions;
