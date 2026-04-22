@@ -122,6 +122,7 @@ const cartController = {
 
       const fieldsToUpdate = {};
 
+      // comprovacion de usuario.
       if (user_dni !== undefined) fieldsToUpdate.user_dni = user_dni;
       if (product_id !== undefined) fieldsToUpdate.product_id = product_id;
       if (quantity !== undefined) fieldsToUpdate.quantity = quantity;

@@ -19,6 +19,12 @@
     transform: translateY(-1px);
 }
 
+.cart-link-btn--primary {
+    background-color: #2d6a4f;
+    color: #ffffff;
+    width: 100%;
+}
+
 .cart-sidebar-shell {
     position: fixed;
     inset: 0;

@@ -18,7 +18,7 @@
     <% } else { %>
         <div class="cart-sidebar__list" aria-label="Productos del carrito">
             <% items.forEach((item) => { %>
-                <article class="cart-sidebar__item" data-item-id="<%= item.id %>" data-quantity="<%= item.quantity %>">
+                <article class="cart-sidebar__item" data-item-id="<%= item.id %>" data-quantity="<%= item.quantity %>" data-subtotal="<%= item.subtotal %>">
                     <% if (item.productImage) { %>
                         <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="cart-sidebar__image">
                     <% } else { %>
@@ -52,9 +52,10 @@
         <div class="cart-sidebar__footer">
             <div class="cart-sidebar__total">
                 <span>Total general</span>
-                <strong><%= totalGeneralFormatted %></strong>
+                <strong data-cart-total><%= totalGeneralFormatted %></strong>
             </div>
             <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
+            <button type="button" class="cart-link-btn cart-link-btn--primary" data-action="checkout">Finalizar compra</button>
         </div>
     <% } %>
 </div>
