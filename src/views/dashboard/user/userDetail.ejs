@@ -1,0 +1,79 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Expediente de Usuario</h1>
+        <p class="header-subtitle">DNI: <strong>
+                <%= user.dni %>
+            </strong></p>
+    </div>
+    <div class="header-actions">
+        <a href="/admin/user/edit/<%= user.dni %>" class="btn btn-warning">Editar Datos</a>
+        <a href="/admin/user" class="btn btn-secondary">← Volver</a>
+    </div>
+</div>
+
+<div class="profile-container">
+    <div class="card profile-side-card">
+        <div class="user-avatar-large">
+            <%= user.name.charAt(0) %>
+                <%= user.surname.charAt(0) %>
+        </div>
+        <h2 class="profile-name">
+            <%= user.name %>
+                <%= user.surname %>
+        </h2>
+        <span class="user-type type-<%= user.type.toLowerCase() %>">
+            <%= user.type %>
+        </span>
+        <hr class="divider">
+        <div class="side-info"><small>Username</small>
+            <p>@<%= user.username %>
+            </p>
+        </div>
+        <div class="side-info"><small>Alta Sistema</small>
+            <p>
+                <%= new Date(user.created_at).toLocaleDateString() %>
+            </p>
+        </div>
+    </div>
+
+    <div class="profile-main-content">
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Contacto y Ubicación</h3>
+            <div class="info-grid">
+                <div class="info-box"><label>Email</label>
+                    <p>
+                        <%= user.email %>
+                    </p>
+                </div>
+                <div class="info-box"><label>Teléfono</label>
+                    <p>
+                        <%= user.phone %>
+                    </p>
+                </div>
+                <div class="info-box full-width"><label>Dirección Física</label>
+                    <p>
+                        <%= user.address %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Datos de Facturación</h3>
+            <div class="info-grid">
+                <div class="info-box"><label>Número Tarjeta</label>
+                    <p class="card-number-display">**** **** **** <%= user.card_number.toString().slice(-4) %>
+                    </p>
+                </div>
+                <div class="info-box"><label>Caducidad</label>
+                    <p>
+                        <%= new Date(user.created_at).toLocaleDateString('es-ES') %>
+                    </p>
+                </div>
+                <div class="info-box"><label>CVV</label>
+                    <p>***</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

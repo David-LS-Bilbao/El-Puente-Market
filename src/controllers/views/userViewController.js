@@ -2,13 +2,13 @@ import userService from '../../services/userService.js'
 
 async function getAllUsers(req, res) {
     const users = await userService.getAllUsers();
-    res.render("dashboard/user", { users, layout: "layouts/dashboard" });
+    res.render("dashboard/user/user", { users, layout: "layouts/dashboard" });
 };
 
 async function getUserByDNI(req, res) {
     const dni = req.params.dni;
     const user = await userService.getUserByDNI(dni);
-    res.render("dashboard/editUser", { user, layout: "layouts/dashboard" });
+    res.render("dashboard/user/editUser", { user, layout: "layouts/dashboard" });
 
 }
 
@@ -31,13 +31,13 @@ async function deleteUser(req, res) {
 }
 
 async function getViewCreateUser(req, res) {
-    res.render('dashboard/createUser', {
+    res.render('dashboard/user/createUser', {
         layout: 'layouts/dashboard'
     });
 }
 
 async function getViewEditUser(req, res) {
-    res.render('dashboard/editUser', {
+    res.render('dashboard/user/editUser', {
         layout: 'layouts/dashboard'
     });
 }
@@ -46,7 +46,7 @@ async function getUserDetail(req, res) {
     const dni = req.params.dni;
     const user = await userService.getUserByDNI(dni);
 
-    return res.render("dashboard/userDetail", {
+    return res.render("dashboard/user/userDetail", {
         user,
         layout: "layouts/dashboard"
     });
