@@ -1,7 +1,7 @@
 import { Router } from "express";
 import apiRouter from './api/apiRouter.js';
 import categoryRouter from "./categoryRouter.js";
-import cartViewRouter from "./cartViewRouter.js";
+import cartViewRouter from "./views/cartViewRouter.js";
 
 const router = Router();
 
