@@ -1,12 +1,18 @@
-import { CartModel, ProductModel, UserModel } from "../../models/index.js";
+import {
+  createCartItem,
+  deleteCartItem,
+  getAllCartItems,
+  getCartItemById,
+  getCartItemRecordById,
+  getCartItemsByUser,
+  updateCartItem,
+} from "../../services/cartService.js";
 
 const cartController = {
   async getAllCartItems(req, res) {
     try {
-      // Recupera todos los registros del carrito junto con el usuario y el producto asociados.
-      const cartItems = await CartModel.findAll({
-        include: [UserModel, ProductModel],
-      });
+      // Recupera todos los registros del carrito junto con sus relaciones.
+      const cartItems = await getAllCartItems();
 
       // Devuelve la colección completa al cliente.
       return res.status(200).json(cartItems);
@@ -23,9 +29,7 @@ const cartController = {
     try {
       const { id } = req.params;
 
-      const cartItem = await CartModel.findByPk(id, {
-        include: [UserModel, ProductModel],
-      });
+      const cartItem = await getCartItemById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -48,10 +52,7 @@ const cartController = {
       const { userDni } = req.params;
 
       // Busca solo los elementos del carrito que pertenecen al usuario indicado.
-      const cartItems = await CartModel.findAll({
-        where: { user_dni: userDni },
-        include: [UserModel, ProductModel],
-      });
+      const cartItems = await getCartItemsByUser(userDni);
 
       // Devuelve el carrito del usuario, aunque esté vacío.
       return res.status(200).json(cartItems);
@@ -84,7 +85,7 @@ const cartController = {
       }
 
       // Persiste el item solo cuando las referencias y valores ya son consistentes.
-      const newCartItem = await CartModel.create({
+      const newCartItem = await createCartItem({
         user_dni,
         product_id,
         quantity,
@@ -112,7 +113,7 @@ const cartController = {
       // total_amount nunca viene del cliente: se recalcula desde el producto real.
       const { user_dni, product_id, quantity } = requestBody;
 
-      const cartItem = await CartModel.findByPk(id);
+      const cartItem = await getCartItemRecordById(id);
 
       if (!cartItem) {
         return res.status(404).json({
@@ -147,7 +148,7 @@ const cartController = {
       fieldsToUpdate.total_amount = (unitPrice * effectiveQuantity).toFixed(2);
       fieldsToUpdate.updated_at = new Date();
 
-      await cartItem.update(fieldsToUpdate);
+      await updateCartItem(id, fieldsToUpdate);
 
       const updatedCartItem = await CartModel.findByPk(id, {
         include: [UserModel, ProductModel],
@@ -171,9 +172,7 @@ const cartController = {
       const { id } = req.params;
 
       // Elimina el registro que coincide con la clave primaria del carrito.
-      const deletedRows = await CartModel.destroy({
-        where: { id },
-      });
+      const deletedRows = await deleteCartItem(id);
 
       // Si no se eliminó ninguna fila, el recurso no existía.
       if (!deletedRows) {
