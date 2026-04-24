@@ -1,15 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Puente Market</title>
-    <link href="http://localhost:3000" rel="stylesheet">
 </head>
 <body class="bg-light">
-</body>
-</html>
 
+    <nav class="category-nav">
+        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+        
+        <label for="menu-toggle" class="menu-button">
+            <span>Categorías Prod...</span>
+            <img src="/icons/menu-icon.svg" alt="Menu" class="icon">
+        </label>
 
-
+        <ul class="category-list">
+            <li class="category-item"><a href="/category/1">Tecnología</a></li>
+            <li class="category-item"><a href="/category/2">Hogar</a></li>
+            <li class="category-item"><a href="/category/3">Libros</a></li>
+            <li class="category-item"><a href="/category/4">Moda</a></li>
+            <li class="category-item"><a href="/category/5">Salud</a></li>
+        </ul>
+    </nav>
