@@ -336,7 +336,8 @@ body {
   .products-grid {
     grid-template-columns: 1fr;
   }
-}er-color: #f0f0f0;
+         }
+         color: #f0f0f0;
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.12);
   --radius: 12px;
@@ -487,12 +488,3 @@ body {
     grid-template-columns: 1fr;
   }
 }
-
-
-
-
-
-
-
-
-
