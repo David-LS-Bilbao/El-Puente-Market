@@ -137,6 +137,9 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-mydocs
 
+
+# Archivos de David Lopez personales
 .claude
+.codex
+mydocs
