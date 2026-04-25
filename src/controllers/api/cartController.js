@@ -26,13 +26,10 @@ function getUnitPrice(product) {
 const cartController = {
   async getAllCartItems(req, res) {
     try {
-      // Recupera todos los registros del carrito junto con sus relaciones.
       const cartItems = await getAllCartItems();
 
-      // Devuelve la colección completa al cliente.
       return res.status(200).json(cartItems);
     } catch (error) {
-      // Responde con error de servidor si falla la consulta.
       return res.status(500).json({
         message: "Error al obtener los elementos del carrito",
         error: error.message,
@@ -63,16 +60,12 @@ const cartController = {
 
   async getCartByUser(req, res) {
     try {
-      // Obtiene el identificador del usuario desde la URL.
       const { userDni } = req.params;
 
-      // Busca solo los elementos del carrito que pertenecen al usuario indicado.
       const cartItems = await getCartItemsByUser(userDni);
 
-      // Devuelve el carrito del usuario, aunque esté vacío.
       return res.status(200).json(cartItems);
     } catch (error) {
-      // Centraliza el fallo de lectura en una respuesta 500.
       return res.status(500).json({
         message: "Error al obtener el carrito del usuario",
         error: error.message,
@@ -82,7 +75,6 @@ const cartController = {
 
   async createCartItem(req, res) {
     try {
-      // Protege frente a requests sin body parseado y permite validar de forma uniforme.
       const requestBody = req.body ?? {};
       const {
         user_dni,
@@ -124,7 +116,6 @@ const cartController = {
 
       const totalAmount = getUnitPrice(product) * qty;
 
-      // Persiste el item solo cuando las referencias y valores ya son consistentes.
       const newCartItem = await createCartItem({
         user_dni,
         product_id,
@@ -150,7 +141,6 @@ const cartController = {
     try {
       const { id } = req.params;
       const requestBody = req.body ?? {};
-      // total_amount nunca viene del cliente: se recalcula desde el producto real.
       const { user_dni, product_id, quantity } = requestBody;
       const parsedQuantity =
         quantity !== undefined ? Number(quantity) : undefined;
@@ -172,7 +162,6 @@ const cartController = {
 
       const fieldsToUpdate = {};
 
-      // comprovacion de usuario.
       if (user_dni !== undefined) fieldsToUpdate.user_dni = user_dni;
       if (product_id !== undefined) fieldsToUpdate.product_id = product_id;
       if (parsedQuantity !== undefined) fieldsToUpdate.quantity = parsedQuantity;
@@ -190,7 +179,6 @@ const cartController = {
         }
       }
 
-      // Recalcula total_amount desde el precio real del producto en BD.
       const effectiveProductId = fieldsToUpdate.product_id ?? cartItem.product_id;
       const effectiveQuantity = fieldsToUpdate.quantity ?? cartItem.quantity;
       const product = await getExistingProduct(effectiveProductId);
@@ -221,25 +209,20 @@ const cartController = {
 
   async deleteCartItem(req, res) {
     try {
-      // Lee el identificador unico del elemento del carrito a eliminar.
       const { id } = req.params;
 
-      // Elimina el registro que coincide con la clave primaria del carrito.
       const deletedRows = await deleteCartItem(id);
 
-      // Si no se eliminó ninguna fila, el recurso no existía.
       if (!deletedRows) {
         return res.status(404).json({
           message: "No se encontró el elemento del carrito para eliminar",
         });
       }
 
-      // Confirma la eliminación cuando la operación se completa correctamente.
       return res.status(200).json({
         message: "Elemento del carrito eliminado correctamente",
       });
     } catch (error) {
-      // Captura errores inesperados durante el borrado.
       return res.status(500).json({
         message: "Error al eliminar el elemento del carrito",
         error: error.message,

@@ -1,13 +1,15 @@
+<link rel="stylesheet" href="/css/productDetails.css"/>
+<% const productImage = product.image || '/img/placeholder.png' %>
+
 <main class="product-container">
     <div class="product-layout">
-        
         <section class="product-image">
-            <img src="/images/<%= product.image %>" alt="<%= product.name %>">
+            <img src="<%= productImage %>" alt="<%= product.name %>">
         </section>
 
         <section class="product-info">
             <h1 class="product-title"><%= product.name %></h1>
-            
+
             <div class="price-section">
                 <% if (product.on_discount && product.price_discount) { %>
                     <span class="old-price"><%= product.price %>€</span>
@@ -22,9 +24,12 @@
                 <%= product.description %>
             </p>
 
-            <div class="stock-status">
+            <div class="purchase-section">
                 <% if (product.stock > 0) { %>
-                    <p class="in-stock">En stock: <strong><%= product.stock %></strong> unidades disponibles</p>
+                    <p class="stock-status in-stock">
+                        En stock: <strong><%= product.stock %> unidades disponibles</strong>
+                    </p>
+
                     <button
                         type="button"
                         class="btn-buy"
@@ -32,16 +37,15 @@
                         data-product-id="<%= product.id %>"
                         data-product-name="<%= product.name %>"
                         data-product-price="<%= Number(product.on_discount && product.price_discount ? product.price_discount : product.price) %>"
-                        data-product-image="<%= product.image ? `/images/${product.image}` : '' %>"
+                        data-product-image="<%= productImage %>"
                     >
                         Añadir al carrito
                     </button>
                 <% } else { %>
-                    <p class="out-of-stock">Agotado temporalmente</p>
+                    <p class="stock-status out-of-stock">Agotado temporalmente</p>
                     <button class="btn-disabled" disabled>Sin existencias</button>
                 <% } %>
             </div>
         </section>
-
     </div>
 </main>

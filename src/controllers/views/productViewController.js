@@ -24,6 +24,11 @@ async function getProductsByCategory(req, res) {
   res.json(products);
 }
 
+async function getProductById(req, res) {
+  const product = await productServices.getProductById(req.params.id);
+  res.render("pages/productDetails", { product, layout: "layouts/main" });
+}
+
 /**
  * Crea un nuevo producto en la base de datos a partir de los datos recibidos en el body.
  *
@@ -78,6 +83,7 @@ async function deleteProduct(req, res) {
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   changeProduct,
   changeProductField,
