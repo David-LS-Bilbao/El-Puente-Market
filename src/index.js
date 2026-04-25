@@ -32,6 +32,7 @@ app.get('/admin', (req, res) => {
     res.render('dashboard/index', { layout: 'layouts/dashboard' });
 });
 
+// syncDB usa { alter: true } en config/db.js — modifica columnas en cada arranque
 checkDB();
 syncDB();
 

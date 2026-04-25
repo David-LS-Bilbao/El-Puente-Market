@@ -1,4 +1,6 @@
 import categoryService from '../../services/categoryService.js'
+import productServices from '../../services/productServices.js'
+
 async function getAllCategory( req, res) {
     const category = await categoryService.getAllCategory();
     res.render("pages/index", { category, layout: "layouts/main"});
@@ -24,6 +26,11 @@ async function deleteCategory(req, res) {
     res.json(category);
 }
 
-export const functions = { getCategoryById, getAllCategory, createCategory, updateCategory, deleteCategory} 
-export default functions;
+async function getProductsByCategory(req, res) {
+    const products = await productServices.getProductsByCategory(req.params.id);
+    res.render('pages/productsByCategory', {products, layout: 'layouts/main'});
+}
+
+export const categoryViewController = { getCategoryById, getAllCategory, createCategory, updateCategory, deleteCategory, getProductsByCategory} 
+export default categoryViewController;
 

@@ -2,6 +2,9 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+     display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* HEADER */
@@ -132,4 +135,68 @@ body {
     text-align: center;
     padding: 15px;
     margin-top: 20px;
+}
+
+/* CATEGORÍAS - NAVEGACIÓN HORIZONTAL (integrado de PUENTE-38; los estilos de product-grid de esa rama se descartaron porque ya viven en products.css) */
+.category-item a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+.category-item a:hover {
+    background-color: #FBB118;
+    color: #000;
+}
+.category-nav {
+    background-color: #fff7c9;
+    padding: 10px;
+    border-bottom: 0.5px solid #FBB118;
+}
+.category-list {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
+}
+
+.menu-checkbox, .menu-button {
+    display: none;
+}
+@media (max-width: 768px) {
+    .menu-button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: bold;
+        background-color: #FBB118;
+        border-radius: 8px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    .category-list {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        padding: 0;
+        background-color: #fff7c9;
+    }
+    .menu-checkbox:checked ~ .category-list {
+        display: flex;
+    }
+    .category-item a {
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+    }
+    .logo {
+        height: 80px;
+    }
 }
