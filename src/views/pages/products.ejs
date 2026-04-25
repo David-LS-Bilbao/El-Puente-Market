@@ -10,12 +10,17 @@
                     <p class="product-category"><%= product.category %></p>
                     <div class="product-footer">
                         <span class="product-price"><%= Number(product.price).toFixed(2) %>€</span>
-                        <form action="/cart/" method="POST">
-                            <input type="hidden" name="productId" value="<%= product.id %>">
-                            <button type="submit" class="add-to-cart-btn">
-                                Añadir
-                            </button>
-                        </form>
+                        <button
+                            type="button"
+                            class="add-to-cart-btn"
+                            data-cart-add
+                            data-product-id="<%= product.id %>"
+                            data-product-name="<%= product.name %>"
+                            data-product-price="<%= Number(product.price) %>"
+                            data-product-image="<%= product.image || '/img/placeholder.png' %>"
+                        >
+                            Añadir
+                        </button>
                     </div>
                 </div>
             </article>
