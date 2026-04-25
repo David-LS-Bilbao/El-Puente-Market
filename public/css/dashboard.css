@@ -1,0 +1,466 @@
+:root {
+    --color-primary: #FBB118;
+    --color-secondary: #1a1a1a;
+    --color-bg: #f4f6f9;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gray-light: #f2f2f2;
+    --color-border: #ccc;
+    --color-btn-primary: #3498db;
+    --color-btn-danger: #e74c3c;
+    --color-btn-warning: #ffc107;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-secondary);
+}
+
+/* --- Layout --- */
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header-subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* --- Estructura Layout Lateral --- */
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: var(--color-primary);
+    /* El amarillo #FBB118 */
+    color: var(--color-black);
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+/* Cabecera del Sidebar (Logo + Título) */
+.sidebar-header {
+    margin-bottom: 40px;
+}
+
+.header-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--color-black);
+}
+
+.logo {
+    width: 45px;
+    height: auto;
+    object-fit: contain;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+/* Navegación */
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-nav a {
+    display: block;
+    color: var(--color-black);
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+/* Efectos en los enlaces */
+.admin-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    /* Un blanco sutil sobre el amarillo */
+    transform: translateX(5px);
+}
+
+/* Clase para el enlace activo (opcional si la usas en el backend) */
+.admin-nav a.active {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+/* --- Cards --- */
+.card {
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card-table {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* --- Tablas --- */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background: #fafafa;
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid var(--color-gray-light);
+}
+
+.table tbody td {
+    padding: 15px;
+    border-bottom: 1px solid var(--color-gray-light);
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: #fdfdfd;
+}
+
+.user-main-text {
+    font-weight: 600;
+}
+
+.user-sub-text {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.user-link {
+    color: var(--color-btn-primary);
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px dashed transparent;
+}
+
+.user-link:hover {
+    border-bottom-color: var(--color-btn-primary);
+}
+
+/* --- Botones --- */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--color-btn-primary);
+    color: white;
+}
+
+.btn-warning {
+    background: var(--color-btn-warning);
+    color: black;
+}
+
+.btn-danger {
+    background: var(--color-btn-danger);
+    color: white;
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #444;
+}
+
+.btn:hover {
+    filter: brightness(90%);
+    transform: translateY(-1px);
+}
+
+.btn-action {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+/* --- Badges --- */
+.user-type {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.type-admin {
+    background: #e8f4fd;
+    color: #3498db;
+}
+
+.type-cliente {
+    background: #fef9e7;
+    color: #f39c12;
+}
+
+/* --- Formularios --- */
+.card-form {
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.form-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--color-gray-light);
+    padding-bottom: 10px;
+}
+
+.step-number {
+    background: var(--color-primary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    margin-right: 12px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(251, 177, 24, 0.2);
+}
+
+.readonly-group input {
+    background: #f9f9f9;
+    cursor: not-allowed;
+    color: #888;
+}
+
+.form-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-large {
+    padding: 15px 40px;
+    font-size: 1rem;
+}
+
+/* --- Detalle Perfil --- */
+.profile-container {
+    display: flex;
+    gap: 30px;
+}
+
+.profile-side-card {
+    flex: 0 0 280px;
+    text-align: center;
+}
+
+.user-avatar-large {
+    width: 90px;
+    height: 90px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.profile-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.detail-title {
+    font-size: 1rem;
+    border-left: 4px solid var(--color-primary);
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+.info-box label {
+    color: #888;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-box p {
+    font-weight: 600;
+    margin: 0;
+}
+
+.card-number-display {
+    font-family: monospace;
+    letter-spacing: 2px;
+}
+
+/* Cuadrícula de las tarjetas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-top: 20px;
+    max-width: 1000px;
+}
+
+/* Estilo base de la tarjeta */
+.stat-card {
+    background: var(--color-white);
+    padding: 25px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* Efecto Hover: se eleva y cambia el borde al color amarillo corporativo */
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+/* Iconos de las tarjetas */
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-right: 20px;
+}
+
+/* Colores de fondo suaves para cada icono */
+.icon-users {
+    background: #e8f4fd;
+}
+
+.icon-products {
+    background: #fef9e7;
+}
+
+.icon-categories {
+    background: #ebfbee;
+}
+
+.icon-cart {
+    background: #fdf2f2;
+}
+
+/* Información de la tarjeta */
+.stat-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+.stat-info p {
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Flecha decorativa */
+.stat-arrow {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: #ccc;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-arrow {
+    transform: translateX(5px);
+    color: var(--color-primary);
+}

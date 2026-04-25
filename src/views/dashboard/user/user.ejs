@@ -1,0 +1,53 @@
+<div class="dashboard-header">
+    <h1>Usuarios</h1>
+    <a href="/admin/user/create" class="btn btn-primary">+ Crear usuario</a>
+</div>
+
+<div class="card card-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th style="text-align: right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user=> { %>
+                <tr>
+                    <td>
+                        <a href="/admin/user/details/<%= user.dni %>" class="user-link">
+                            <%= user.dni %>
+                        </a>
+                    </td>
+                    <td>
+                        <div class="user-main-text">
+                            <%= user.username %>
+                        </div>
+                        <small class="user-sub-text">
+                            <%= user.email %>
+                        </small>
+                    </td>
+                    <td>
+                        <%= user.name %>
+                            <%= user.surname %>
+                    </td>
+                    <td>
+                        <span class="user-type type-<%= user.type.toLowerCase() %>">
+                            <%= user.type %>
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="/admin/user/edit/<%= user.dni %>" class="btn btn-warning btn-action">Editar</a>
+                        <form action="/admin/user/delete/<%= user.dni %>" method="POST" style="display:inline;"
+                            onsubmit="return confirm('¿Estás seguro de que quieres eliminar este usuario?')">
+                            <button type="submit" class="btn btn-danger btn-action">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>
