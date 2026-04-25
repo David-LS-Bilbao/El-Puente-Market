@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const content = document.querySelector("[data-cart-sidebar-content]");
 
   if (!trigger || !shell || !content) return;
+  // Carrito temporal de visitante en localStorage — activo mientras no hay usuario autenticado, se vacía al pasar por checkout
   const STORAGE_KEY = "elPuenteGuestCart";
   const getUserDni = () => trigger.dataset.cartSidebarUserDni?.trim() || "";
   const isGuestCart = () => !getUserDni();

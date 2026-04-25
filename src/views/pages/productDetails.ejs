@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/css/productDetails.css"/>
+<%# productImage: fuente única para la imagen visible y para data-product-image del carrito guest — evita divergencia de rutas entre /images/ y /img/ %>
 <% const productImage = product.image || '/img/placeholder.png' %>
 
 <main class="product-container">
@@ -30,6 +31,7 @@
                         En stock: <strong><%= product.stock %> unidades disponibles</strong>
                     </p>
 
+                    <%# data-cart-add + data-product-* es el contrato con cart-sidebar.js para añadir al carrito guest %>
                     <button
                         type="button"
                         class="btn-buy"
