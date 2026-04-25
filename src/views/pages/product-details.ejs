@@ -25,10 +25,17 @@
             <div class="stock-status">
                 <% if (product.stock > 0) { %>
                     <p class="in-stock">En stock: <strong><%= product.stock %></strong> unidades disponibles</p>
-                    <form action="/cart/add" method="POST">
-                        <input type="hidden" name="productId" value="<%= product.id %>">
-                        <button type="submit" class="btn-buy">Añadir al carrito</button>
-                    </form>
+                    <button
+                        type="button"
+                        class="btn-buy"
+                        data-cart-add
+                        data-product-id="<%= product.id %>"
+                        data-product-name="<%= product.name %>"
+                        data-product-price="<%= Number(product.on_discount && product.price_discount ? product.price_discount : product.price) %>"
+                        data-product-image="<%= product.image ? `/images/${product.image}` : '' %>"
+                    >
+                        Añadir al carrito
+                    </button>
                 <% } else { %>
                     <p class="out-of-stock">Agotado temporalmente</p>
                     <button class="btn-disabled" disabled>Sin existencias</button>
