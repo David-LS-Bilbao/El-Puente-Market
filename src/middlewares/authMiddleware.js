@@ -49,7 +49,7 @@ async function checkCredentials(req, res, next) {
         type: user.type,
         username: user.username
     }
-    return res.redirect("/admin");
+    return res.redirect(user.type === "admin" ? "/admin" : "/");
     //next();
 }
 

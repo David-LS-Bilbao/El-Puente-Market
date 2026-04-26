@@ -1,4 +1,6 @@
 <header class="header">
+    <% const currentUser = typeof user !== 'undefined' ? user : null; %>
+    <% const profileHref = !currentUser ? '/auth/login' : currentUser.type === 'admin' ? '/admin' : '/'; %>
 
     <div class="header-top">
 
@@ -9,10 +11,13 @@
 
         <!-- DERECHA: acciones -->
         <div class="right">
+            <% if (currentUser) { %>
+                <span class="user-sub-text">Hola, <%= currentUser.username %></span>
+            <% } %>
 
             <!-- Carrito -->
             <button type="button" class="icon-btn" data-cart-sidebar-trigger
-                data-cart-sidebar-user-dni="<%= typeof userDni !== 'undefined' ? userDni : '12345678A' %>"
+                data-cart-sidebar-user-dni="<%= currentUser?.dni || (typeof userDni !== 'undefined' ? userDni : '12345678A') %>"
                 aria-label="Abrir carrito">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
@@ -22,7 +27,8 @@
             </button>
 
             <!-- Login -->
-            <a href="/login" class="icon-btn">
+            <a href="<%= profileHref %>" class="icon-btn"
+                title="<%= currentUser ? ('Sesión iniciada: ' + currentUser.username) : 'Iniciar sesión' %>">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"

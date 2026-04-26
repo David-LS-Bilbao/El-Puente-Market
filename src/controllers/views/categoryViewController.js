@@ -1,5 +1,6 @@
 import categoryService from '../../services/categoryService.js'
 import productServices from '../../services/productServices.js'
+import cartServices from '../../services/cartService.js'
 async function getAllCategory(req, res) {
     const category = await categoryService.getAllCategory();
     res.render("pages/index", { category, layout: "layouts/main" });
@@ -36,7 +37,16 @@ async function deleteCategory(req, res) {
 async function getProductsByCategory(req, res) {
     const categories = await categoryService.getAllCategory();
     const products = await productServices.getProductsByCategory(req.params.id);
-    res.render('pages/productsByCategory', { products, categories, layout: 'layouts/main' });
+    const userDni = req.session?.user?.dni || '12345678A';
+    const cartSidebar = await cartServices.getCartViewData(userDni);
+
+    res.render('pages/productsByCategory', {
+        products,
+        categories,
+        cartSidebar,
+        userDni,
+        layout: 'layouts/main'
+    });
 }
 
 

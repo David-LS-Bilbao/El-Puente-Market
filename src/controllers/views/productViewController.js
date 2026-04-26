@@ -5,9 +5,10 @@ import categoryService from '../../services/categoryService.js';
 async function getAllProductsAndCart(req, res) {
   const products = await productServices.getAllProducts();
   const categories = await categoryService.getAllCategory();
-  const cart = await cartServices.getCartItemsByUser(req?.sesion?.user || '12345678A');
+  const userDni = req.session?.user?.dni || '12345678A';
+  const cartSidebar = await cartServices.getCartViewData(userDni);
 
-  res.render("pages/index", { products, cart, categories, layout: "layouts/main" });
+  res.render("pages/index", { products, categories, cartSidebar, userDni, layout: "layouts/main" });
 }
 
 async function getAllProducts(req, res) {
@@ -42,7 +43,18 @@ async function getProductsByCategory(req, res) {
 async function getProductById(req, res) {
   const product = await productServices.getProductById(req.params.id);
   const categories = await categoryService.getAllCategory();
-  res.render("pages/productDetails", { product, categories, layout: "layouts/main" });
+  const userDni = req.session?.user?.dni || '12345678A';
+  const cartSidebar = await cartServices.getCartViewData(userDni);
+  if (!product) {
+    return res.status(404).render("pages/productDetails", {
+      product: null,
+      categories,
+      cartSidebar,
+      userDni,
+      layout: "layouts/main"
+    });
+  }
+  res.render("pages/productDetails", { product, categories, cartSidebar, userDni, layout: "layouts/main" });
 }
 
 async function addNewProduct(req, res) {
@@ -101,6 +113,9 @@ async function getViewEditProduct(req, res) {
 
 async function getProductViewById(req, res) {
   const product = await productServices.getProductById(req.params.id);
+  if (!product) {
+    return res.status(404).redirect("/admin/product");
+  }
   return res.render("dashboard/product/detailProduct", {
     product,
     layout: "layouts/dashboard"
