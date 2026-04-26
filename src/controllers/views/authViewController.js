@@ -34,8 +34,8 @@ async function login(req, res) {
             role: user.role,
             name: user.name
         }
-        const token = jwt.sign(payload, process.env.JWT_SECRET);
-        return res.render("dashboard/admin", {
+        const token = jwt.sign(payload, process.env.JWT_SECRET || "dev-jwt-secret");
+        return res.render("dashboard/index", {
             layout: "layouts/dashboard"
         });
 
@@ -76,4 +76,3 @@ export const functions = {
 }
 
 export default functions;
-

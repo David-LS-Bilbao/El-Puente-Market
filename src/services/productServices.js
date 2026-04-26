@@ -13,6 +13,13 @@ async function getProductsByCategory(id) {
   return products;
 }
 
+async function getProductById(id) {
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
+  return product;
+}
+
 async function addNewProduct(productData) {
   const newProduct = await ProductModel.create(productData, {
     include: [CategoryModel],
@@ -21,10 +28,12 @@ async function addNewProduct(productData) {
 }
 
 async function updateProduct(id, productData) {
-  const updatedProduct = await ProductModel.update(productData, {
+  await ProductModel.update(productData, {
     where: { id: id },
   });
-  const product = await ProductModel.findByPk(id);
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
   return product;
 }
 
@@ -33,19 +42,12 @@ async function deleteProduct(id) {
   return deletedProduct;
 }
 
-async function getProductById(id) {
-  const product = await ProductModel.findByPk(id, {
-    include: [CategoryModel],
-  });
-  return product;
-}
-
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   updateProduct,
   deleteProduct,
-  getProductById
 };
 export default functions;

@@ -13,21 +13,18 @@ function normalizeImagePath(imagePath) {
   return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
 }
 
-// Consulta base de todo el carrito con las relaciones necesarias para la API.
 async function getAllCartItems() {
   return CartModel.findAll({
     include: [UserModel, ProductModel],
   });
 }
 
-// Recupera un item concreto del carrito manteniendo la misma forma enriquecida.
 async function getCartItemById(id) {
   return CartModel.findByPk(id, {
     include: [UserModel, ProductModel],
   });
 }
 
-// Filtra el carrito por usuario sin duplicar los includes en el controlador.
 async function getCartItemsByUser(userDni) {
   return CartModel.findAll({
     where: { user_dni: userDni },
@@ -35,7 +32,6 @@ async function getCartItemsByUser(userDni) {
   });
 }
 
-// Devuelve los datos completos para renderizar el sidebar del carrito.
 async function getCartViewData(userDni) {
   const cartItems = await CartModel.findAll({
     where: { user_dni: userDni },
@@ -62,7 +58,6 @@ async function getCartViewData(userDni) {
   };
 }
 
-// Recupera un item del carrito para un usuario y producto específico.
 async function getCartItemByUserAndProduct(userDni, productId) {
   return CartModel.findOne({
     where: {
@@ -72,38 +67,52 @@ async function getCartItemByUserAndProduct(userDni, productId) {
   });
 }
 
-// Crea un nuevo registro de carrito sin acoplar el service a la capa HTTP.
 async function createCartItem(cartItemData) {
   return CartModel.create(cartItemData);
 }
 
-// Recupera el registro base para operaciones de escritura como update.
 async function getCartItemRecordById(id) {
   return CartModel.findByPk(id);
 }
 
-// Aplica un patch parcial sobre un item existente del carrito.
 async function updateCartItem(id, fieldsToUpdate) {
   const cartItem = await getCartItemRecordById(id);
-  return cartItem.update(fieldsToUpdate);
+
+  if (!cartItem) {
+    return null;
+  }
+
+  await cartItem.update(fieldsToUpdate);
+  return cartItem;
 }
 
-// Elimina un item por id y devuelve cuántas filas se han borrado.
 async function deleteCartItem(id) {
   return CartModel.destroy({
     where: { id },
   });
 }
 
-export const functions = {
+const functions = {
   createCartItem,
   deleteCartItem,
   getAllCartItems,
   getCartItemById,
-  getCartViewData,
   getCartItemByUserAndProduct,
   getCartItemRecordById,
   getCartItemsByUser,
+  getCartViewData,
+  updateCartItem,
+};
+
+export {
+  createCartItem,
+  deleteCartItem,
+  getAllCartItems,
+  getCartItemById,
+  getCartItemByUserAndProduct,
+  getCartItemRecordById,
+  getCartItemsByUser,
+  getCartViewData,
   updateCartItem,
 };
 

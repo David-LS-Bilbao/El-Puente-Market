@@ -1,5 +1,21 @@
 import productServices from "../../services/productServices.js";
-import categoryService from '../../services/categoryService.js'
+import categoryService from "../../services/categoryService.js";
+
+function normalizeProductPayload(body) {
+  const priceDiscount =
+    body.price_discount === "" || body.price_discount == null
+      ? null
+      : Number(body.price_discount);
+
+  return {
+    ...body,
+    id_category: Number(body.id_category),
+    price: Number(body.price),
+    stock: Number(body.stock),
+    on_discount: body.on_discount === true || body.on_discount === "true",
+    price_discount: priceDiscount,
+  };
+}
 
 /**
  * Obtiene todos los productos almacenados en la base de datos.
@@ -22,7 +38,10 @@ async function getAllProducts(req, res) {
  */
 async function getAllViewProducts(req, res) {
   const products = await productServices.getAllProducts();
-  res.render("dashboard/product/product", { products, layout: "layouts/dashboard" });
+  res.render("dashboard/product/product", {
+    products,
+    layout: "layouts/dashboard",
+  });
 }
 
 /**
@@ -34,7 +53,12 @@ async function getAllViewProducts(req, res) {
  */
 async function getProductsByCategory(req, res) {
   const products = await productServices.getProductsByCategory(req.params.id);
-  res.json(products);
+  res.render("pages/productsByCategory", { products, layout: "layouts/main" });
+}
+
+async function getPublicProductById(req, res) {
+  const product = await productServices.getProductById(req.params.id);
+  res.render("pages/productDetails", { product, layout: "layouts/main" });
 }
 
 /**
@@ -45,8 +69,8 @@ async function getProductsByCategory(req, res) {
  * @returns {Promise<void>}
  */
 async function addNewProduct(req, res) {
-  const newProduct = await productServices.addNewProduct(req.body);
-  return res.redirect('/admin/product');
+  await productServices.addNewProduct(normalizeProductPayload(req.body));
+  return res.redirect("/admin/product");
 }
 
 
@@ -60,8 +84,11 @@ async function addNewProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function updateProduct(req, res) {
-  const product = await productServices.updateProduct(req.params.id, req.body);
-  res.redirect('/admin/product');
+  await productServices.updateProduct(
+    req.params.id,
+    normalizeProductPayload(req.body),
+  );
+  res.redirect("/admin/product");
 }
 
 
@@ -73,17 +100,17 @@ async function updateProduct(req, res) {
  * @returns {Promise<void>}
  */
 async function deleteProduct(req, res) {
-  const product = await productServices.deleteProduct(req.params.id);
-  res.redirect('/admin/product');
+  await productServices.deleteProduct(req.params.id);
+  res.redirect("/admin/product");
 }
 
 async function getViewCreateProduct(req, res) {
   try {
     const categories = await categoryService.getAllCategory();
 
-    res.render('dashboard/product/createProduct', {
-      layout: 'layouts/dashboard',
-      categories: categories
+    res.render("dashboard/product/createProduct", {
+      layout: "layouts/dashboard",
+      categories,
     });
   } catch (error) {
     res.status(500).send("Error interno del servidor");
@@ -95,10 +122,10 @@ async function getViewEditProduct(req, res) {
     const categories = await categoryService.getAllCategory();
     const product = await productServices.getProductById(req.params.id);
 
-    res.render('dashboard/product/editProduct', {
-      layout: 'layouts/dashboard',
-      product: product,
-      categories: categories
+    res.render("dashboard/product/editProduct", {
+      layout: "layouts/dashboard",
+      product,
+      categories,
     });
   } catch (error) {
     res.status(500).send("Error interno del servidor");
@@ -109,21 +136,20 @@ async function getProductById(req, res) {
   const product = await productServices.getProductById(req.params.id);
   return res.render("dashboard/product/detailProduct", {
     product,
-    layout: "layouts/dashboard"
+    layout: "layouts/dashboard",
   });
 }
-
-
 
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getPublicProductById,
   addNewProduct,
   updateProduct,
   deleteProduct,
   getAllViewProducts,
   getViewCreateProduct,
   getViewEditProduct,
-  getProductById
+  getProductById,
 };
 export default functions;

@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="/css/productDetails.css"/>
+<%# productImage: fuente única para la imagen visible y para data-product-image del carrito guest — evita divergencia de rutas entre /images/ y /img/ %>
+<% const productImage = product.image || '/img/placeholder.png' %>
+
+<main class="product-container">
+    <div class="product-layout">
+        <section class="product-image">
+            <img src="<%= productImage %>" alt="<%= product.name %>">
+        </section>
+
+        <section class="product-info">
+            <h1 class="product-title"><%= product.name %></h1>
+
+            <div class="price-section">
+                <% if (product.on_discount && product.price_discount) { %>
+                    <span class="old-price"><%= product.price %>€</span>
+                    <span class="current-price discount"><%= product.price_discount %>€</span>
+                    <span class="badge">¡Oferta!</span>
+                <% } else { %>
+                    <span class="current-price"><%= product.price %>€</span>
+                <% } %>
+            </div>
+
+            <p class="description">
+                <%= product.description %>
+            </p>
+
+            <div class="purchase-section">
+                <% if (product.stock > 0) { %>
+                    <p class="stock-status in-stock">
+                        En stock: <strong><%= product.stock %> unidades disponibles</strong>
+                    </p>
+
+                    <%# data-cart-add + data-product-* es el contrato con cart-sidebar.js para añadir al carrito guest %>
+                    <button
+                        type="button"
+                        class="btn-buy"
+                        data-cart-add
+                        data-product-id="<%= product.id %>"
+                        data-product-name="<%= product.name %>"
+                        data-product-price="<%= Number(product.on_discount && product.price_discount ? product.price_discount : product.price) %>"
+                        data-product-image="<%= productImage %>"
+                    >
+                        Añadir al carrito
+                    </button>
+                <% } else { %>
+                    <p class="stock-status out-of-stock">Agotado temporalmente</p>
+                    <button class="btn-disabled" disabled>Sin existencias</button>
+                <% } %>
+            </div>
+        </section>
+    </div>
+</main>
