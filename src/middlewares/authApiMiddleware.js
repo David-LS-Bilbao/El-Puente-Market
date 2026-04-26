@@ -55,10 +55,11 @@ async function checkCredentials(req, res, next) {
             {
                 dni: user.dni,
                 email: user.email,
-                role: user.type,
+                type: user.type,
                 username: user.username
             },
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
         );
 
         return res.status(200).json({
@@ -72,9 +73,42 @@ async function checkCredentials(req, res, next) {
     }
 }
 
-export default checkCredentials;
+const verifyToken = (req, res, next) => {
+    // El token llega en la cabecera: Authorization: Bearer <token>
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token no proporcionado' })
+    }
+    const token = authHeader.split(' ')[1]
+    try {
+        // jwt.verify lanza un error si el token es inválido o ha expirado
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
+        // Adjuntamos el payload a req para que los controladores lo usen
+        req.user = payload // { id: 1, rol: 'admin', iat: ..., exp: ... }
+        next()
+    } catch (error) {
+        console.error(error)
+        // JsonWebTokenError: token malformado o firma inválida
+        // TokenExpiredError: token expirado
+        return res.status(401).json({ error: 'Token inválido o expirado' })
+    }
+}
+
+function requireRoleApi(...types) {
+    return (req, res, next) => {
+        if (types.includes(req.user?.type)) {
+            next();
+        }
+        else {
+            res.status(403).json({ error: "Acceso denegado" });
+        }
+    }
+}
+
 
 export {
     isRegisterDataCorrect,
-    checkCredentials
+    checkCredentials,
+    verifyToken,
+    requireRoleApi
 }
