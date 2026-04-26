@@ -1,4 +1,5 @@
 import categoryService from '../../services/categoryService.js'
+import productServices from '../../services/productServices.js'
 async function getAllCategory(req, res) {
     const category = await categoryService.getAllCategory();
     res.render("pages/index", { category, layout: "layouts/main" });

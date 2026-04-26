@@ -32,12 +32,6 @@ async function createCartItem(req, res) {
   res.redirect(`/${req.headers.referer.split('/').pop()}`);
 }
 
-async function deleteCartItem(req, res) {
-  const cartItem = await cartService.removeFromCart(req.body.userDni, req.body.productId);
-  res.redirect("/");
-}
-
-
 async function getAllCartItems(req, res) {
   const cartItems = await cartService.getAllCartItems();
 

@@ -8,18 +8,10 @@ async function getAllProducts() {
 async function getProductsByCategory(id) {
   console.log(id)
   const products = await ProductModel.findAll({
-    where: { id_category: id }, 
+    where: { id_category: id },
     include: [CategoryModel],
   });
   return products;
-}
-
-async function getProductById(id) {
-  console.log("Buscando producto con ID:", id);
-  const product = await ProductModel.findByPk(id, {
-    include: [CategoryModel],
-  });
-  return product;
 }
 
 async function addNewProduct(productData) {
@@ -55,7 +47,6 @@ export const functions = {
   getProductById,
   addNewProduct,
   updateProduct,
-  deleteProduct,
-  getProductById
+  deleteProduct
 };
 export default functions;

@@ -1,10 +1,10 @@
 import 'dotenv/config'; // Shortcut to import and config at once
 import express from 'express'; // <--- You were missing this!
 import expressEjsLayouts from 'express-ejs-layouts';
+import session from "express-session";
+import { checkDB, syncDB } from './config/db.js';
+import { injectUserToViews } from './middlewares/authMiddleware.js';
 import router from './routes/router.js';
-
-// If checkDB and syncDB are functions from another file, import them too:
-// import { checkDB, syncDB } from './config/db.js'; 
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -12,9 +12,15 @@ const app = express();
 app.set("views", "./src/views");
 app.set("view engine", "ejs");
 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(expressEjsLayouts);
 app.use(express.static("public"));
 
+app.use(injectUserToViews);
 app.use(express.urlencoded());
 app.use(express.json());
 
@@ -28,9 +34,8 @@ app.get('/admin', (req, res) => {
     res.render('dashboard/index', { layout: 'layouts/dashboard' });
 });
 
-// Ensure these functions are defined or imported
-if (typeof checkDB === 'function') checkDB();
-if (typeof syncDB === 'function') syncDB();
+checkDB();
+syncDB();
 
 app.listen(PORT, () => {
     console.log(`Servidor conectado correctamente por el puerto ${PORT}`);
