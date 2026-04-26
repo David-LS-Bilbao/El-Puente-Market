@@ -10,7 +10,7 @@ async function getCartItems() {
 async function createCartItem(req, res) {
   const product = await productServices.getProductById(req.body.productId);
   const cartItem = await cartService.getCartItemByUserAndProduct(
-    req.body.userDni,
+    req.body.userDni || '12345678A',
     req.body.productId,
   );
 
@@ -23,7 +23,7 @@ async function createCartItem(req, res) {
     });
   } else {
     await cartService.createCartItem({
-      user_dni: req.body.userDni,
+      user_dni: req.body.userDni || '12345678A',
       product_id: req.body.productId,
       quantity: Number(req.body.quantity),
       total_amount: Number(product.price) * Number(req.body.quantity),
@@ -33,7 +33,7 @@ async function createCartItem(req, res) {
 }
 
 async function deleteCartItem(req, res) {
-  const cartItem = await cartService.deleteCartItem(req.body.userDni, req.body.productId);
+  const cartItem = await cartService.removeFromCart(req.body.userDni, req.body.productId);
   res.redirect("/");
 }
 
