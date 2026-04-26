@@ -3,8 +3,9 @@ import cartViewController from "../../controllers/views/cartViewController.js";
 
 const cartViewRouter = Router();
 
-// Expone solo el flujo lateral del carrito y el borrado asociado.
-cartViewRouter.get("/:userDni/sidebar", cartViewController.renderCartSidebar);
-cartViewRouter.post("/:userDni/item/:id/delete", cartViewController.deleteCartItemAndRedirect);
-cartViewRouter.post("/:dni", cartViewController.createCartItem);
+cartViewRouter.get("/", cartViewController.getCartItems);
+cartViewRouter.post("/", cartViewController.createCartItem);
+cartViewRouter.post("/addOne", cartViewController.createCartItem);
+cartViewRouter.post("/delete", cartViewController.deleteCartItem);
+
 export default cartViewRouter;
