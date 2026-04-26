@@ -27,7 +27,7 @@ viewRouter.use(async (req, res, next) => {
 
 viewRouter.use('/admin/user', userViewRouter);
 viewRouter.use("/category", categoryViewRouter);
-viewRouter.use("/cart", cartViewRouter);
+viewRouter.use("/carrito", cartViewRouter);
 viewRouter.use("/", productViewRouter);
 
 export default viewRouter;
