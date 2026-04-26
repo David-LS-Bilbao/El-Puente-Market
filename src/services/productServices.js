@@ -14,6 +14,7 @@ async function getProductsByCategory(id) {
 }
 
 async function getProductById(id) {
+  console.log("Buscando producto con ID:", id);
   const product = await ProductModel.findByPk(id, {
     include: [CategoryModel],
   });

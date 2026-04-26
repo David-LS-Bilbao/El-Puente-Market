@@ -1,21 +1,25 @@
-<div class="cart-sidebar">
-    <div class="cart-sidebar__header">
-        <div>
-            <p class="cart-sidebar__eyebrow">Carrito</p>
-            <h2>Tu carrito</h2>
-        </div>
-        <button type="button" class="cart-sidebar__close" data-cart-sidebar-close aria-label="Cerrar carrito">
-            ×
-        </button>
-    </div>
+<% const cartData = typeof cartSidebar !== 'undefined' ? cartSidebar : {}; const items = cartData.items || []; const isEmpty = typeof cartData.isEmpty !== 'undefined' ? cartData.isEmpty : items.length === 0; const totalGeneralFormatted = cartData.totalGeneralFormatted || '0,00 €'; %>
+<div class="cart-sidebar-shell" aria-hidden="true">
+  <div class="cart-sidebar-shell__backdrop" data-cart-sidebar-close></div>
+  <div class="cart-sidebar-shell__panel">
+    <div class="cart-sidebar">
+      <div class="cart-sidebar__header">
+          <div>
+              <p class="cart-sidebar__eyebrow">Carrito</p>
+              <h2>Tu carrito</h2>
+          </div>
+          <button type="button" class="cart-sidebar__close" data-cart-sidebar-close aria-label="Cerrar carrito">
+              ×
+          </button>
+      </div>
 
-    <% if (isEmpty) { %>
+      <% if (isEmpty) { %>
         <section class="cart-sidebar__empty">
             <h3>Tu carrito está vacío</h3>
             <p>Añade productos para verlos reflejados aquí.</p>
             <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
         </section>
-    <% } else { %>
+      <% } else { %>
         <div class="cart-sidebar__list" aria-label="Productos del carrito">
             <% items.forEach((item) => { %>
                 <article class="cart-sidebar__item" data-item-id="<%= item.id %>" data-quantity="<%= item.quantity %>" data-subtotal="<%= item.subtotal %>">
@@ -55,7 +59,44 @@
                 <strong data-cart-total><%= totalGeneralFormatted %></strong>
             </div>
             <button type="button" class="cart-link-btn" data-cart-sidebar-close>Seguir comprando</button>
-            <button type="button" class="cart-link-btn cart-link-btn--primary" data-action="checkout">Finalizar compra</button>
+            <a href="/checkout" class="cart-link-btn cart-link-btn--primary">Pagar</a>
         </div>
-    <% } %>
+      <% } %>
+    </div>
+  </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const trigger = document.querySelector('[data-cart-sidebar-trigger]');
+  const shell = document.querySelector('.cart-sidebar-shell');
+  if (!trigger || !shell) return;
+
+  const openSidebar = () => {
+    shell.classList.add('cart-sidebar-shell--open');
+    shell.setAttribute('aria-hidden', 'false');
+  };
+
+  const closeSidebar = () => {
+    shell.classList.remove('cart-sidebar-shell--open');
+    shell.setAttribute('aria-hidden', 'true');
+  };
+
+  trigger.addEventListener('click', (event) => {
+    event.preventDefault();
+    openSidebar();
+  });
+
+  shell.addEventListener('click', (event) => {
+    if (event.target.closest('[data-cart-sidebar-close]')) {
+      closeSidebar();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeSidebar();
+    }
+  });
+});
+</script>

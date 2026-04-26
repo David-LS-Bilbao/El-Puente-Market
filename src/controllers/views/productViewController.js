@@ -9,7 +9,7 @@ import productServices from "../../services/productServices.js";
  */
 async function getAllProducts(req, res) {
   const products = await productServices.getAllProducts();
-  res.render("pages/index", { products, layout: "layouts/main" });
+  res.render("pages/index", { products, userDni: "12345678A", layout: "layouts/main" });
 }
 
 /**
@@ -26,7 +26,7 @@ async function getProductsByCategory(req, res) {
 
 async function getProductById(req, res) {
   const product = await productServices.getProductById(req.params.id);
-  res.render("pages/productDetails", { product, layout: "layouts/main" });
+  res.render("pages/productDetails", { product, userDni: "12345678A", layout: "layouts/main"});
 }
 
 /**

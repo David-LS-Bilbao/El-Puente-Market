@@ -29,8 +29,8 @@
             En stock: <strong><%= product.stock %> unidades disponibles</strong>
         </p>
         
-        <form action="/cart/add" method="POST" class="add-to-cart-form">
-            <input type="hidden" name="productId" value="<%= product.id %>">
+        <form action="/cart/<%= userDni %>" method="POST" class="add-to-cart-form">
+            <input type="hidden" name="productId" value="<%= Number(product.id) %>">
             <button type="submit" class="btn-buy">Añadir al carrito</button>
         </form>
     <% } else { %>

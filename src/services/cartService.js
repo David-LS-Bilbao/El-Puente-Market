@@ -1,5 +1,18 @@
 import { CartModel, ProductModel, UserModel } from "../models/index.js";
 
+const currencyFormatter = new Intl.NumberFormat("es-ES", {
+  style: "currency",
+  currency: "EUR",
+});
+
+function normalizeImagePath(imagePath) {
+  if (!imagePath) return null;
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+  return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+}
+
 // Consulta base de todo el carrito con las relaciones necesarias para la API.
 async function getAllCartItems() {
   return CartModel.findAll({
@@ -19,6 +32,43 @@ async function getCartItemsByUser(userDni) {
   return CartModel.findAll({
     where: { user_dni: userDni },
     include: [UserModel, ProductModel],
+  });
+}
+
+// Devuelve los datos completos para renderizar el sidebar del carrito.
+async function getCartViewData(userDni) {
+  const cartItems = await CartModel.findAll({
+    where: { user_dni: userDni },
+    include: [ProductModel],
+    order: [["id", "ASC"]],
+  });
+
+  const items = cartItems.map((item) => ({
+    id: item.id,
+    quantity: item.quantity,
+    subtotal: Number(item.total_amount || 0),
+    subtotalFormatted: currencyFormatter.format(Number(item.total_amount || 0)),
+    productName: item.Product?.name || "Producto sin nombre",
+    productImage: normalizeImagePath(item.Product?.image),
+  }));
+
+  const totalGeneral = items.reduce((total, item) => total + item.subtotal, 0);
+
+  return {
+    userDni,
+    items,
+    isEmpty: items.length === 0,
+    totalGeneralFormatted: currencyFormatter.format(totalGeneral),
+  };
+}
+
+// Recupera un item del carrito para un usuario y producto específico.
+async function getCartItemByUserAndProduct(userDni, productId) {
+  return CartModel.findOne({
+    where: {
+      user_dni: userDni,
+      product_id: productId,
+    },
   });
 }
 
@@ -50,6 +100,8 @@ export const functions = {
   deleteCartItem,
   getAllCartItems,
   getCartItemById,
+  getCartViewData,
+  getCartItemByUserAndProduct,
   getCartItemRecordById,
   getCartItemsByUser,
   updateCartItem,
