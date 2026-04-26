@@ -4,30 +4,13 @@ import userViewRouter from "./userViewRouter.js";
 import categoryViewRouter from './categoryViewRouter.js';
 import cartViewRouter from "./cartViewRouter.js";
 import cartService from "../../services/cartService.js";
-
+import authViewRouter from "./authViewRouter.js";
 const viewRouter = Router();
 
-viewRouter.use(async (req, res, next) => {
-  const userDni = "12345678A";
-  res.locals.userDni = userDni;
-
-  try {
-    res.locals.cartSidebar = await cartService.getCartViewData(userDni);
-  } catch (error) {
-    res.locals.cartSidebar = {
-      userDni,
-      items: [],
-      isEmpty: true,
-      totalGeneralFormatted: "0,00 €",
-    };
-  }
-
-  next();
-});
-
 viewRouter.use('/admin/user', userViewRouter);
-viewRouter.use("/category", categoryViewRouter);
-viewRouter.use("/carrito", cartViewRouter);
-viewRouter.use("/", productViewRouter);
+viewRouter.use('/', productViewRouter);
+viewRouter.use('/auth', authViewRouter);
+viewRouter.use("/", categoryViewRouter);
+viewRouter.use("/", cartViewRouter);
 
 export default viewRouter;

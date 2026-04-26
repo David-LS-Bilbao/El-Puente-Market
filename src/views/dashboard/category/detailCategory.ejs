@@ -1,0 +1,59 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Detalle de Categoría</h1>
+        <p class="header-subtitle">Información de clasificación</p>
+    </div>
+    <div class="header-actions">
+        <a href="/admin/category/edit/<%= category.id %>" class="btn btn-warning">Editar</a>
+        <a href="/admin/category" class="btn btn-secondary">← Volver</a>
+    </div>
+</div>
+
+<div class="profile-container">
+    <div class="card profile-side-card" style="text-align: center;">
+        <div class="user-avatar-large" style="margin: 0 auto 1rem;">
+            <%= category.name.charAt(0).toUpperCase() %>
+        </div>
+        <h2 class="profile-name">
+            <%= category.name %>
+        </h2>
+        <p class="user-sub-text">ID de sistema: #<%= category.id %>
+        </p>
+    </div>
+
+    <div class="profile-main-content">
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Resumen de Categoría</h3>
+            <div class="info-grid">
+                <div class="info-box">
+                    <label>Nombre Oficial</label>
+                    <p>
+                        <%= category.name %>
+                    </p>
+                </div>
+                <div class="info-box">
+                    <label>Estado</label>
+                    <p><span class="user-type type-admin">Activa</span></p>
+                </div>
+            </div>
+        </div>
+
+        <% if (typeof products !=='undefined' ) { %>
+            <div class="card detail-section-card">
+                <h3 class="detail-title">Productos vinculados (<%= products.length %>)</h3>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <% products.forEach(prod=> { %>
+                        <li
+                            style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                            <span>
+                                <%= prod.name %>
+                            </span>
+                            <a href="/admin/product/details/<%= prod.id %>"
+                                style="color: var(--color-primary); font-size: 0.9rem;">Ver producto →</a>
+                        </li>
+                        <% }) %>
+                </ul>
+            </div>
+            <% } %>
+    </div>
+</div>
