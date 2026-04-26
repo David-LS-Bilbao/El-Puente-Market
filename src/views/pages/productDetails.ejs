@@ -1,22 +1,30 @@
-<link rel="stylesheet" href="/css/productDetails.css"/>
+<link rel="stylesheet" href="/css/productDetails.css" />
 <main class="product-container">
     <div class="product-layout">
-        
+
         <section class="product-image">
-            <img src="/images/<%= product.image %>" alt="<%= product.name %>">
+            <img src="/images/<%= product.image || '' %>" alt="<%= product.name %>">
         </section>
 
         <section class="product-info">
-            <h1 class="product-title"><%= product.name %></h1>
-            
+            <h1 class="product-title">
+                <%= product.name %>
+            </h1>
+
             <div class="price-section">
                 <% if (product.on_discount && product.price_discount) { %>
-                    <span class="old-price"><%= product.price %>€</span>
-                    <span class="current-price discount"><%= product.price_discount %>€</span>
+                    <span class="old-price">
+                        <%= product.price %>€
+                    </span>
+                    <span class="current-price discount">
+                        <%= product.price_discount %>€
+                    </span>
                     <span class="badge">¡Oferta!</span>
-                <% } else { %>
-                    <span class="current-price"><%= product.price %>€</span>
-                <% } %>
+                    <% } else { %>
+                        <span class="current-price">
+                            <%= product.price %>€
+                        </span>
+                        <% } %>
             </div>
 
             <p class="description">
@@ -24,20 +32,33 @@
             </p>
 
             <div class="purchase-section">
-    <% if (product.stock > 0) { %>
-        <p class="stock-status in-stock">
-            En stock: <strong><%= product.stock %> unidades disponibles</strong>
-        </p>
-        
-        <form action="/cart/<%= userDni %>" method="POST" class="add-to-cart-form">
-            <input type="hidden" name="productId" value="<%= Number(product.id) %>">
-            <button type="submit" class="btn-buy">Añadir al carrito</button>
-        </form>
-    <% } else { %>
-        <p class="stock-status out-of-stock">Agotado temporalmente</p>
-        <button class="btn-disabled" disabled>Sin existencias</button>
-    <% } %>
-</div>
+                <% if (product.stock> 0) { %>
+                    <p class="stock-status in-stock">
+                        En stock: <strong>
+                            <%= product.stock %> unidades disponibles
+                        </strong>
+                    </p>
+
+
+                    <form action="/carrito" method="POST" class="add-to-cart-form">
+                        <input type="hidden" name="productId" value="<%= product.id %>">
+                        <input type="hidden" name="userDni" value="<%= product.user_dni || '12345678A' %>">
+
+                        <input type="hidden" name="name" value="<%= product.name %>">
+                        <input type="hidden" name="price" value="<%= product.price %>">
+                        <input type="hidden" name="image" value="<%= product.image %>">
+
+                        <input type="hidden" name="quantity" value="1">
+
+                        <button type="submit" class="btn-buy">
+                            Añadir al carrito
+                        </button>
+                    </form>
+                    <% } else { %>
+                        <p class="stock-status out-of-stock">Agotado temporalmente</p>
+                        <button class="btn-disabled" disabled>Sin existencias</button>
+                        <% } %>
+            </div>
         </section>
 
     </div>
