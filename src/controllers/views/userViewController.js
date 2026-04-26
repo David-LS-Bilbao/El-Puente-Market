@@ -19,11 +19,28 @@ async function createUserRegister(req, res) {
 
 
 async function updateUser(req, res) {
-    const dni = req.params.dni;
-    const user = await userService.updateUser(dni, req.body);
-    res.redirect('/admin/user');
-}
+    try {
+        const dniOriginal = req.params.dni;
 
+        let { dni, password, valid_date, cvv, card_number, ...userData } = req.body;
+
+        if (password && password.trim() !== "") {
+            userData.password = password;
+        }
+
+        userData.valid_date = (valid_date && valid_date.trim() !== "") ? valid_date : null;
+
+        userData.cvv = (cvv && cvv !== "") ? parseInt(cvv) : null;
+
+        userData.card_number = (card_number && card_number.trim() !== "") ? card_number : null;
+
+        await userService.updateUser(dniOriginal, userData);
+
+        res.redirect('/admin/user');
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+}
 async function deleteUser(req, res) {
     const dni = req.params.dni;
     const user = await userService.deleteUser(dni);
@@ -37,7 +54,10 @@ async function getViewCreateUser(req, res) {
 }
 
 async function getViewEditUser(req, res) {
+    const dni = req.params.dni;
+    const user = await userService.getUserByDNI(dni);
     res.render('dashboard/user/editUser', {
+        user,
         layout: 'layouts/dashboard'
     });
 }
