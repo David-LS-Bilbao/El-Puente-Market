@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="card login-card">
+
+            <div class="login-header">
+                <h2 class="login-title">Crear cuenta</h2>
+                <p class="header-subtitle">Regístrate para continuar</p>
+            </div>
+
+            <% if (locals.message) { %>
+                <div class="login-error">
+                    <i class="error-icon">⚠️</i>
+                    <%= message %>
+                </div>
+                <% } %>
+                    <form action="/auth/register" method="POST" class="login-form">
+
+                        <div class="form-group">
+                            <label for="dni">DNI</label>
+                            <input type="text" name="dni" id="dni" placeholder="12345678X" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Usuario</label>
+                            <input type="text" name="username" id="username" placeholder="Tu nombre de usuario"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" name="email" id="email" placeholder="correo@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passwordRepeat">Repetir contraseña</label>
+                            <input type="password" name="passwordRepeat" id="passwordRepeat" placeholder="••••••••"
+                                required>
+                        </div>
+
+                        <button class="btn btn-primary btn-large btn-block" type="submit">
+                            Registrarme
+                        </button>
+
+                    </form>
+
+                    <div class="login-footer">
+                        <p>¿Ya tienes cuenta? <a href="/auth/login" class="user-link">Inicia sesión aquí</a></p>
+                    </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

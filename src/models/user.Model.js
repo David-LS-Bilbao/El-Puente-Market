@@ -23,35 +23,35 @@ const UserModel = sequelize.define(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     surname: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     card_number: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: true,
     },
     valid_date: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     cvv: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false,
+      defaultValue: "cliente",
     },
     created_at: {
       type: DataTypes.DATE,

@@ -33,11 +33,19 @@ async function deleteProduct(id) {
   return deletedProduct;
 }
 
+async function getProductById(id) {
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
+  return product;
+}
+
 export const functions = {
   getAllProducts,
   getProductsByCategory,
   addNewProduct,
   updateProduct,
   deleteProduct,
+  getProductById
 };
 export default functions;
