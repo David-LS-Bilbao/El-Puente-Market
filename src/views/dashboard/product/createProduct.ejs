@@ -1,0 +1,93 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Añadir Nuevo Producto</h1>
+        <p class="header-subtitle">Ingresa los detalles para el catálogo</p>
+    </div>
+    <a href="/admin/product" class="btn btn-secondary">← Volver</a>
+</div>
+
+<div class="card card-form">
+    <form action="/admin/product" method="POST">
+
+        <!-- SECCIÓN 1: Información Básica -->
+        <div class="form-section">
+            <div class="section-title"><span class="step-number">1</span>Detalles del Producto</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre del Producto</label>
+                    <input type="text" name="name" required placeholder="Ej: Zapatillas Running">
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select name="id_category" class="custom-select" required>
+                        <option value="" disabled selected>Selecciona una categoría</option>
+                        <!-- Aquí deberías iterar tus categorías si las pasas desde el controller -->
+                        <% categories.forEach(cat=> { %>
+                            <option value="<%= cat.id %>">
+                                <%= cat.name %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Descripción</label>
+                    <textarea name="description" rows="3" placeholder="Describe brevemente el producto..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: Inventario y Multimedia -->
+        <div class="form-section">
+            <div class="section-title"><span class="step-number">2</span>Inventario y Visualización</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Stock Inicial</label>
+                    <input type="number" name="stock" required placeholder="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label>URL de la Imagen</label>
+                    <input type="text" name="image" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: Precios y Ofertas -->
+        <div class="form-section">
+            <div class="section-title"><span class="step-number">3</span>Precios y Descuentos</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Precio Original (€)</label>
+                    <input type="number" step="0.01" name="price" required placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>¿Aplicar Descuento?</label>
+                    <select name="on_discount" class="custom-select" id="discountToggle">
+                        <option value="false">No</option>
+                        <option value="true">Sí, aplicar oferta</option>
+                    </select>
+                </div>
+                <div class="form-group" id="discountPriceField">
+                    <label>Precio Rebajado (€)</label>
+                    <input type="number" step="0.01" name="price_discount" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-large">Guardar Producto</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Pequeño script para ocultar/mostrar el campo de precio con descuento
+    const toggle = document.getElementById('discountToggle');
+    const field = document.getElementById('discountPriceField');
+
+    toggle.addEventListener('change', () => {
+        field.style.display = toggle.value === 'true' ? 'block' : 'none';
+    });
+
+    // Ejecutar al inicio por si acaso
+    field.style.display = toggle.value === 'true' ? 'block' : 'none';
+</script>

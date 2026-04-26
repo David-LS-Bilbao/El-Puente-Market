@@ -1,4 +1,5 @@
 import productServices from "../../services/productServices.js";
+import categoryService from '../../services/categoryService.js'
 
 /**
  * Obtiene todos los productos almacenados en la base de datos.
@@ -10,6 +11,18 @@ import productServices from "../../services/productServices.js";
 async function getAllProducts(req, res) {
   const products = await productServices.getAllProducts();
   res.render("pages/index", { products, layout: "layouts/main" });
+}
+
+/**
+ * Obtiene todos los productos almacenados en la base de datos.
+ *
+ * @param {import('express').Request} req - Objeto de petición HTTP.
+ * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve la lista de productos.
+ * @returns {Promise<void>}
+ */
+async function getAllViewProducts(req, res) {
+  const products = await productServices.getAllProducts();
+  res.render("dashboard/product/product", { products, layout: "layouts/dashboard" });
 }
 
 /**
@@ -33,8 +46,9 @@ async function getProductsByCategory(req, res) {
  */
 async function addNewProduct(req, res) {
   const newProduct = await productServices.addNewProduct(req.body);
-  res.json(newProduct);
+  return res.redirect('/admin/product');
 }
+
 
 /**
  * Actualiza un producto existente identificado por su id.
@@ -45,24 +59,11 @@ async function addNewProduct(req, res) {
  * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve el resultado de la actualización.
  * @returns {Promise<void>}
  */
-async function changeProduct(req, res) {
+async function updateProduct(req, res) {
   const product = await productServices.updateProduct(req.params.id, req.body);
-  res.json(product);
+  res.redirect('/admin/product');
 }
 
-/**
- * Actualiza campos específicos de un producto existente.
- *
- * Delega la lógica en `changeProduct`, permitiendo reutilizar la misma
- * funcionalidad para operaciones tipo PATCH.
- *
- * @param {import('express').Request} req - Objeto de petición HTTP con el id en `req.params` y los campos a modificar en `req.body`.
- * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve el resultado de la actualización.
- * @returns {Promise<void>}
- */
-async function changeProductField(req, res) {
-  changeProduct(req, res);
-}
 
 /**
  * Elimina un producto de la base de datos identificado por su id.
@@ -73,14 +74,56 @@ async function changeProductField(req, res) {
  */
 async function deleteProduct(req, res) {
   const product = await productServices.deleteProduct(req.params.id);
+  res.redirect('/admin/product');
 }
+
+async function getViewCreateProduct(req, res) {
+  try {
+    const categories = await categoryService.getAllCategory();
+
+    res.render('dashboard/product/createProduct', {
+      layout: 'layouts/dashboard',
+      categories: categories
+    });
+  } catch (error) {
+    res.status(500).send("Error interno del servidor");
+  }
+}
+
+async function getViewEditProduct(req, res) {
+  try {
+    const categories = await categoryService.getAllCategory();
+    const product = await productServices.getProductById(req.params.id);
+
+    res.render('dashboard/product/editProduct', {
+      layout: 'layouts/dashboard',
+      product: product,
+      categories: categories
+    });
+  } catch (error) {
+    res.status(500).send("Error interno del servidor");
+  }
+}
+
+async function getProductById(req, res) {
+  const product = await productServices.getProductById(req.params.id);
+  return res.render("dashboard/product/detailProduct", {
+    product,
+    layout: "layouts/dashboard"
+  });
+}
+
+
 
 export const functions = {
   getAllProducts,
   getProductsByCategory,
   addNewProduct,
-  changeProduct,
-  changeProductField,
+  updateProduct,
   deleteProduct,
+  getAllViewProducts,
+  getViewCreateProduct,
+  getViewEditProduct,
+  getProductById
 };
 export default functions;

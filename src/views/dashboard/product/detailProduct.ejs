@@ -1,0 +1,129 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Expediente de Producto</h1>
+        <p class="header-subtitle">ID Referencia: <strong>#<%= product.id %></strong></p>
+    </div>
+    <div class="header-actions">
+        <a href="/admin/product/edit/<%= product.id %>" class="btn btn-warning">Editar Producto</a>
+        <a href="/admin/product" class="btn btn-secondary">← Volver</a>
+    </div>
+</div>
+
+<div class="profile-container">
+    <!-- Columna Lateral: Imagen y Estado Rápido -->
+    <div class="card profile-side-card">
+        <div class="product-image-container" style="margin-bottom: 1.5rem;">
+            <img src="<%= product.image || '/img/no-product.png' %>" alt="<%= product.name %>"
+                style="width: 100%; border-radius: 12px; aspect-ratio: 1/1; object-fit: cover; border: 1px solid var(--color-gray-light);">
+        </div>
+
+        <h2 class="profile-name">
+            <%= product.name %>
+        </h2>
+
+        <span class="user-type <%= product.on_discount ? 'type-admin' : 'type-cliente' %>">
+            <%= product.on_discount ? 'En Oferta' : 'Precio Normal' %>
+        </span>
+
+        <hr class="divider">
+
+        <div class="side-info">
+            <small>Categoría ID</small>
+            <p>
+                <%= product.id_category %>
+            </p>
+        </div>
+
+        <div class="side-info">
+            <small>Stock Actual</small>
+            <p class="<%= product.stock < 10 ? 'text-danger' : '' %>" style="font-weight: bold;">
+                <%= product.stock %> unidades
+            </p>
+        </div>
+
+        <div class="side-info">
+            <small>Fecha de Registro</small>
+            <p>
+                <%= new Date(product.created_at).toLocaleDateString('es-ES') %>
+            </p>
+        </div>
+    </div>
+
+    <!-- Columna Principal: Detalles y Descripción -->
+    <div class="profile-main-content">
+
+        <!-- Bloque de Precios -->
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Información Económica</h3>
+            <div class="info-grid">
+                <div class="info-box">
+                    <label>Precio Base</label>
+
+                    <% if (product.on_discount) { %>
+                        <p style="text-decoration: line-through; color: gray;">
+                            <%= product.price %> €
+                        </p>
+                        <% } else { %>
+                            <p style="font-weight: bold;">
+                                <%= product.price %> €
+                            </p>
+                            <% } %>
+
+                </div>
+
+                <% if (product.on_discount) { %>
+                    <div class="info-box">
+                        <label>Precio Rebajado</label>
+                        <p style="color: var(--color-btn-danger); font-weight: bold; font-size: 1.2rem;">
+                            <%= product.price_discount %> €
+                        </p>
+                    </div>
+                    <div class="info-box">
+                        <label>Ahorro</label>
+                        <p>
+                            <%= (product.price - product.price_discount).toFixed(2) %> €
+                        </p>
+                    </div>
+                    <% } else { %>
+                        <div class="info-box">
+                            <label>Estado de Oferta</label>
+                            <p>Sin descuentos activos</p>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+
+        <!-- Bloque de Descripción -->
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Descripción y Especificaciones</h3>
+            <div class="info-grid">
+                <div class="info-box full-width">
+                    <label>Descripción del Producto</label>
+                    <p>
+                        <%= product.description || 'Sin descripción disponible.' %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloque de Logística -->
+        <div class="card detail-section-card">
+            <h3 class="detail-title">Logística</h3>
+            <div class="info-grid">
+                <div class="info-box">
+                    <label>Estado de Inventario</label>
+                    <p>
+                        <% if (product.stock==0) { %>
+                            <span style="color: red;">⚠️ Agotado</span>
+                            <% } else if (product.stock < 10) { %>
+                                <span style="color: orange;">Stock Crítico</span>
+                                <% } else { %>
+                                    <span style="color: green;">Disponible</span>
+                                    <% } %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
