@@ -9,6 +9,6 @@ const viewRouter = Router();
 viewRouter.use('/admin/user', userViewRouter);
 viewRouter.use('/', productViewRouter);
 viewRouter.use('/auth', authViewRouter);
-viewRouter.use("/category", categoryViewRouter);
+viewRouter.use("/", categoryViewRouter);
 
 export default viewRouter;

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import categoryRouter from "../categoryRouter.js";
+import categoryRouter from "./categoryRouter.js";
 import cartRouter from "./cartRouter.js";
 import userRouter from "./userRouter.js";
 import productRouter from "./productRouter.js"
