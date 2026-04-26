@@ -95,6 +95,10 @@ async function deleteCartItem(id) {
   });
 }
 
+async function removeFromCart(user_dni, product_id) {
+  return await Cart.destroy({ where: { user_dni, product_id } });
+};
+
 export const functions = {
   createCartItem,
   deleteCartItem,
@@ -105,6 +109,7 @@ export const functions = {
   getCartItemRecordById,
   getCartItemsByUser,
   updateCartItem,
+  removeFromCart
 };
 
 export default functions;
