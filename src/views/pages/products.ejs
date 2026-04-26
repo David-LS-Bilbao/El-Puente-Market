@@ -6,7 +6,7 @@
             <article class="product-card">
                 <a href="/<%= product.id %>" class="product-link">
                     <div class="product-image">
-                        <img src="<%= product.image || '/img/placeholder.png' %>" alt="<%= product.name %>">
+                        <img src="" alt="<%= product.name %>">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name"><%= product.name %></h3>
@@ -16,8 +16,16 @@
 
                 <div class="product-footer">
                     <span class="product-price"><%= Number(product.price).toFixed(2) %>€</span>
-                    <form action="/cart/<%= userDni %>" method="POST">
-                        <input type="hidden" name="productId" value="<%= Number(product.id) %>">
+                    <form action="/carrito" method="POST">
+                        <input type="hidden" name="productId" value="<%= product.id %>">
+                        <input type="hidden" name="userDni" value="<%= product.user_dni || '12345678A' %>">
+                        
+                        <input type="hidden" name="name" value="<%= product.name %>">
+                        <input type="hidden" name="price" value="<%= product.price %>">
+                        <input type="hidden" name="image" value="<%= product.image %>">
+                        
+                        <input type="hidden" name="quantity" value="1">
+
                         <button type="submit" class="add-to-cart-btn">
                             Añadir
                         </button>
