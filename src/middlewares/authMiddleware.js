@@ -3,9 +3,9 @@ import bcrypt from "bcrypt";
 
 async function isRegisterDataCorrect(req, res, next) {
     try {
-        const { dni, name, email, password, passwordRepeat } = req.body;
+        const { dni, username, email, password, passwordRepeat } = req.body;
 
-        if (!dni || !name || !email || !password || !passwordRepeat) {
+        if (!dni || !username || !email || !password || !passwordRepeat) {
             return res.redirect("/auth/register?message=Faltan campos obligatorios");
         }
 
@@ -22,7 +22,7 @@ async function isRegisterDataCorrect(req, res, next) {
 
         req.registerData = {
             dni,
-            name,
+            username,
             email,
             password: hash,
         };
@@ -46,79 +46,43 @@ async function checkCredentials(req, res, next) {
     req.session.user = {
         dni: user.dni,
         email: user.email,
-        role: user.role,
-        name: user.name
+        type: user.type,
+        username: user.username
     }
-    next();
+    return res.redirect("/admin");
+    //next();
 }
 
 async function isLoggedIn(req, res, next) {
     if (req.session.user) {
         next()
     } else {
-        return res.redirect("/auth/login?message=Inicia sesión");
-    }
-}
-const verifyToken = (req, res, next) => {
-    // El token llega en la cabecera: Authorization: Bearer <token>
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Token no proporcionado' })
-    }
-    const token = authHeader.split(' ')[1]
-    try {
-        // jwt.verify lanza un error si el token es inválido o ha expirado
-        const payload = jwt.verify(token, process.env.JWT_SECRET)
-        // Adjuntamos el payload a req para que los controladores lo usen
-        req.user = payload // { id: 1, rol: 'admin', iat: ..., exp: ... }
-        next()
-    } catch (error) {
-        console.error(error)
-        // JsonWebTokenError: token malformado o firma inválida
-        // TokenExpiredError: token expirado
-        return res.status(401).json({ error: 'Token inválido o expirado' })
+        return res.redirect("/auth/login");
     }
 }
 
-function requireRole(...roles) {
+function requireRole(...types) {
     return (req, res, next) => {
-        if (roles.includes(req.session.user.role)) {
+        if (types.includes(req.session.user.type)) {
             next();
         }
         else {
-            res.status(403).redirect("/auth/login?message=Inicia sesión")
+            res.status(403).redirect("/auth/login")
         }
     }
 }
-function requireRoleApi(...roles) {
-    return (req, res, next) => {
-        if (roles.includes(req.user?.role)) {
-            next();
-        }
-        else {
-            res.status(403).json({ error: "Acceso denegado" });
-        }
-    }
-}
-// async function requireAdmin(req, res, next) {
-//     if (req.session.user.role === "admin") {
-//         next();
-//     }
-//     else {
-//         res.status(403).redirect("/auth/login?message=Inicia sesión")
-//     }
-// }
+
 
 const injectUserToViews = (req, res, next) => {
-    // Verificamos si existe la sesión y el usuario dentro de ella
     if (req.session && req.session.user) {
         res.locals.user = req.session.user;
     } else {
-        res.locals.user = null; // Opcional: asegura que 'user' esté definido como null si no hay sesión
+        res.locals.user = null;
     }
 
     next();
 };
+
 
 
 export {
@@ -126,8 +90,5 @@ export {
     checkCredentials,
     isLoggedIn,
     requireRole,
-    // requireAdmin,
-    injectUserToViews,
-    verifyToken,
-    requireRoleApi
+    injectUserToViews
 }

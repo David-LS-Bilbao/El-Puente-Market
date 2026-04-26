@@ -1,3 +1,4 @@
+<!-- Parte Superior: Logo -->
 <div class="sidebar-header">
     <a href="/admin" class="header-link">
         <img src="/img/favicon.png" alt="Logo El Puente" class="logo">
@@ -5,9 +6,36 @@
     </a>
 </div>
 
+<!-- Parte Central: Navegación -->
 <nav class="admin-nav">
-    <a href="/admin/user">Usuarios</a>
-    <a href="/admin/product">Productos</a>
-    <a href="/admin/category">Categoría</a>
-    <a href="/admin/cart">Carrito</a>
+    <a href="/admin/user" class="nav-item">Usuarios</a>
+    <a href="/admin/product" class="nav-item">Productos</a>
+    <a href="/admin/category" class="nav-item">Categoría</a>
+    <a href="/admin/cart" class="nav-item">Carrito</a>
 </nav>
+
+<!-- Parte Inferior: Usuario -->
+<% if (user) { %>
+    <div class="sidebar-user">
+        <div class="user-avatar-mini">
+            <%= user.username.charAt(0).toUpperCase() %>
+        </div>
+        <div class="user-info">
+            <span class="user-name">
+                <%= user.username %>
+            </span>
+            <span class="user-email">
+                <%= user.email %>
+            </span>
+        </div>
+        <form action="/auth/logout" method="POST" style="margin: 0;">
+            <button type="submit" class="btn-logout" title="Cerrar sesión">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                </svg>
+            </button>
+        </form>
+    </div>
+    <% } %>
