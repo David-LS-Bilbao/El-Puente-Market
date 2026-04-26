@@ -4,14 +4,16 @@
 
         <!-- IZQUIERDA: logo + título -->
         <div class="left">
-            <img src="/img/logo.png" alt="Logo El Puente" class="logo">
+            <a href="/"><img src="/img/logo.png" alt="Logo El Puente" class="logo"></a>
         </div>
 
         <!-- DERECHA: acciones -->
         <div class="right">
 
             <!-- Carrito -->
-            <button type="button" class="icon-btn" data-cart-sidebar-trigger data-cart-sidebar-user-dni="<%= typeof userDni !== 'undefined' ? userDni : '12345678A' %>" aria-label="Abrir carrito">
+            <button type="button" class="icon-btn" data-cart-sidebar-trigger
+                data-cart-sidebar-user-dni="<%= typeof userDni !== 'undefined' ? userDni : '12345678A' %>"
+                aria-label="Abrir carrito">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"
