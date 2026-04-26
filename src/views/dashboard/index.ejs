@@ -1,3 +1,16 @@
-<% users.forEach(user=> { %>
-    <h1><%- user.dni %></h1>
-    <% }) %>
+<body>
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <%- include('../partials/adminSidebar') %>
+        </aside>
+
+        <!-- Contenido -->
+        <main class="dashboard-content">
+            <%- body %>
+        </main>
+
+    </div>
+
+</body>

@@ -6,8 +6,9 @@ async function getAllProducts() {
 }
 
 async function getProductsByCategory(id) {
+  console.log(id)
   const products = await ProductModel.findAll({
-    where: { id_category: id },
+    where: { id_category: id }, 
     include: [CategoryModel],
   });
   return products;
