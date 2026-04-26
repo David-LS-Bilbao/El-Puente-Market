@@ -7,10 +7,17 @@ async function getAllProducts() {
 
 async function getProductsByCategory(id) {
   const products = await ProductModel.findAll({
-    where: { id_category: id },
+    where: { id_category: id }, 
     include: [CategoryModel],
   });
   return products;
+}
+
+async function getProductById(id) {
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
+  return product;
 }
 
 async function addNewProduct(productData) {
@@ -36,6 +43,7 @@ async function deleteProduct(id) {
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   updateProduct,
   deleteProduct,

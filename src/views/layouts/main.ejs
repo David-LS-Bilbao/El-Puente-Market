@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'El Puente' %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+
+    <%- include('../partials/header') %>
+     <%- include('../partials/navbar') %>
+
+        <main class="main-content">
+            <%- body %>
+        </main>
+
+        <section class="cart-sidebar-shell" data-cart-sidebar-shell aria-hidden="true">
+            <div class="cart-sidebar-shell__backdrop" data-cart-sidebar-close></div>
+            <aside class="cart-sidebar-shell__panel" aria-label="Carrito lateral">
+                <div class="cart-sidebar-shell__content" data-cart-sidebar-content></div>
+            </aside>
+        </section>
+
+        <%- include('../partials/footer') %>
+
+        <script src="/scripts-sidebar/cart-sidebar.js"></script>
+</body>
+
+</html>

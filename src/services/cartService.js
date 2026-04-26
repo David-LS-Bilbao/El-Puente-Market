@@ -40,8 +40,7 @@ async function updateCartItem(id, fieldsToUpdate) {
     return null;
   }
 
-  await cartItem.update(fieldsToUpdate);
-  return cartItem;
+  return cartItem.update(fieldsToUpdate);
 }
 
 // Elimina un item por id y devuelve cuántas filas se han borrado.
@@ -50,6 +49,16 @@ async function deleteCartItem(id) {
     where: { id },
   });
 }
+
+const functions = {
+  createCartItem,
+  deleteCartItem,
+  getAllCartItems,
+  getCartItemById,
+  getCartItemRecordById,
+  getCartItemsByUser,
+  updateCartItem,
+};
 
 export {
   createCartItem,
@@ -60,3 +69,5 @@ export {
   getCartItemsByUser,
   updateCartItem,
 };
+
+export default functions;
