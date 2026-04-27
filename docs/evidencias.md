@@ -1,3 +1,14 @@
+### [2026-04-27] Integración de vistas web y fix de flujo de auth — rama PUENTE-51
+
+- Objetivo: integrar las vistas del panel de administración y corregir el flujo de autenticación web para que funcione de forma coherente con sesión.
+- Trabajo realizado: se corrigió `authViewController.js` (login unificado con redirección por tipo de usuario) y `authMiddleware.js` (`checkCredentials` sin bloqueo admin-only, `requireRole` con null-guard). El login web ahora redirige a `/admin` si `type = admin` y a `/` si `type = cliente`. Se creó usuario de prueba admin (DNI `12345678X`) en la BD local.
+- Archivos afectados: `src/controllers/views/authViewController.js`, `src/middlewares/authMiddleware.js`, `src/middlewares/productMiddleware.js`.
+- Resultado: login web funcional para admin y cliente, panel `/admin` accesible con sesión admin real, logout operativo.
+- Validación: login admin → `/admin` OK, login cliente → `/` OK, credenciales incorrectas → mensaje de error OK, `/admin` sin sesión → redirige a login OK.
+- Rama integrada: `test/integracion-from-puente23` mergeada en `PUENTE-51/test-integracion-vistas` vía fast-forward sin conflictos.
+
+---
+
 ### [2026-04-18] Cierre funcional de la feature `cart` en la API
 
 - Objetivo: implementar la API del recurso `cart` en backend Express + Sequelize, conectando rutas, controlador y modelos con PostgreSQL.
