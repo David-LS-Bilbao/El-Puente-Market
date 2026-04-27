@@ -1,88 +1,53 @@
 import { CartModel, ProductModel } from "../../models/index.js";
-import cartService from '../../services/cartService.js'
+import cartService from "../../services/cartService.js";
+import productServices from "../../services/productServices.js";
 
-// const currencyFormatter = new Intl.NumberFormat("es-ES", {
-//   style: "currency",
-//   currency: "EUR",
-// });
+async function getCartItems(req, res) {
+  const cartItems = await cartService.getAllCartItems();
+  res.json(cartItems);
+}
 
-// // Adapta la ruta de imagen para que la vista pueda pintar tanto URLs completas
-// // como rutas relativas del proyecto sin lógica extra en el EJS.
-// function normalizeImagePath(imagePath) {
-//   if (!imagePath) return null;
-//   if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-//     return imagePath;
-//   }
-//   return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-// }
+async function createCartItem(req, res) {
+  const product = await productServices.getProductById(req.body.productId);
+  if (!product) {
+    return res.status(404).redirect(req.get("referer") || "/");
+  }
 
-// async function buildCartViewData(userDni) {
-//   const cartItems = await CartModel.findAll({
-//     where: { user_dni: userDni },
-//     include: [ProductModel],
-//     order: [["id", "ASC"]],
-//   });
+  const userDni = req.body.userDni || req.body.user_dni || req.session?.user?.dni;
+  if (!userDni) {
+    return res.redirect("/auth/login?message=Debes iniciar sesión para usar el carrito");
+  }
+  const quantityToAdd = Number(req.body.quantity) || 1;
+  const unitPrice = product.on_discount && product.price_discount != null
+    ? Number(product.price_discount)
+    : Number(product.price);
 
-//   const items = cartItems.map((item) => ({
-//     id: item.id,
-//     quantity: item.quantity,
-//     subtotal: Number(item.total_amount || 0),
-//     subtotalFormatted: currencyFormatter.format(Number(item.total_amount || 0)),
-//     productName: item.Product?.name || "Producto sin nombre",
-//     productImage: normalizeImagePath(item.Product?.image),
-//   }));
+  const cartItem = await cartService.getCartItemByUserAndProduct(
+    userDni,
+    req.body.productId,
+  );
 
-//   const totalGeneral = items.reduce((total, item) => total + item.subtotal, 0);
-
-//   return {
-//     userDni,
-//     items,
-//     isEmpty: items.length === 0,
-//     totalGeneralFormatted: currencyFormatter.format(totalGeneral),
-//   };
-// }
-
-// const cartViewController = {
-//   async renderCartSidebar(req, res) {
-//     try {
-//       const { userDni } = req.params;
-//       const cartViewData = await buildCartViewData(userDni);
-
-//       return res.render("partials/cart-sidebar", {
-//         layout: false,
-//         ...cartViewData,
-//       });
-//     } catch (error) {
-//       return res.status(500).send("No se pudo cargar el sidebar del carrito");
-//     }
-//   },
-
-//   async deleteCartItemAndRedirect(req, res) {
-//     try {
-//       const { userDni, id } = req.params;
-
-//       // Limita el borrado al carrito del usuario indicado en la URL para no
-//       // eliminar una linea ajena por error.
-//       const cartItem = await CartModel.findOne({
-//         where: {
-//           id,
-//           user_dni: userDni,
-//         },
-//       });
-
-//       if (!cartItem) {
-//         return res.status(404).send("No se encontró la linea del carrito");
-//       }
-
-//       await cartItem.destroy();
-
-//       return res.redirect("/");
-//     } catch (error) {
-//       return res.status(500).send("No se pudo eliminar la linea del carrito");
-//     }
-//   },
-// };
-
+  if (cartItem) {
+    const newQuantity = Number(cartItem.quantity) + quantityToAdd;
+    if (newQuantity <= 0) {
+      await cartService.deleteCartItem(cartItem.id);
+    } else {
+      const newTotalAmount = unitPrice * Number(newQuantity);
+      await cartService.updateCartItem(cartItem.id, {
+        quantity: newQuantity,
+        total_amount: newTotalAmount,
+      });
+    }
+  } else {
+    await cartService.createCartItem({
+      user_dni: userDni,
+      product_id: req.body.productId,
+      quantity: quantityToAdd,
+      total_amount: unitPrice * quantityToAdd,
+    });
+  }
+  return res.redirect(req.get("referer") || "/");
+}
 
 async function getAllCartItems(req, res) {
   const cartItems = await cartService.getAllCartItems();
@@ -95,34 +60,68 @@ async function getAllViewCartItems(req, res) {
 
 };
 
+async function getCheckout(req, res) {
+  const userDni = req.session?.user?.dni;
+  if (!userDni) {
+    return res.redirect("/auth/login?message=Debes iniciar sesión para pagar");
+  }
+
+  const cartSidebar = await cartService.getCartViewData(userDni);
+  return res.render("pages/checkout", {
+    cartSidebar,
+    userDni,
+    categories: [],
+    activeCategoryId: null,
+    layout: "layouts/main"
+  });
+}
+
+async function simulateCheckout(req, res) {
+  const userDni = req.session?.user?.dni;
+  if (!userDni) {
+    return res.redirect("/auth/login?message=Debes iniciar sesión para pagar");
+  }
+
+  const cartSidebar = await cartService.getCartViewData(userDni);
+  if (cartSidebar.isEmpty) {
+    return res.redirect("/?message=Tu carrito ya está vacío");
+  }
+
+  await cartService.clearCartByUser(userDni);
+
+  return res.render("pages/checkout-success", {
+    paidItems: cartSidebar.items,
+    totalGeneralFormatted: cartSidebar.totalGeneralFormatted,
+    userDni,
+    categories: [],
+    activeCategoryId: null,
+    layout: "layouts/main"
+  });
+}
+
 async function updateCartItem(req, res) {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
 
-    // 1. Usamos tu función de servicio para obtener el registro base
     const cartItem = await cartService.getCartItemRecordById(id);
 
     if (!cartItem) {
       return res.status(404).send("Ítem del carrito no encontrado");
     }
 
-    // 2. Obtenemos el producto para recalcular el precio (Seguridad)
     const product = await ProductModel.findByPk(cartItem.product_id);
 
     const unitPrice = product.on_discount && product.price_discount != null
       ? Number(product.price_discount)
       : Number(product.price);
 
-    // 3. Preparamos los campos para el "patch parcial" que hace tu servicio
     const fieldsToUpdate = {
       quantity: Number(quantity),
       total_amount: (unitPrice * Number(quantity)).toFixed(2),
       updated_at: new Date()
     };
 
-    // 4. Llamamos a tu función updateCartItem del servicio
-    // Esta función internamente ya hace el cartItem.update(fieldsToUpdate)
     await cartService.updateCartItem(id, fieldsToUpdate);
 
     return res.redirect('/admin/cart');
@@ -133,11 +132,29 @@ async function updateCartItem(req, res) {
 }
 
 async function deleteCartItem(req, res) {
-  const { id } = req.params;
-  const deletedRows = await cartService.deleteCartItem(id);
+  if (req.params.id) {
+    await cartService.deleteCartItem(req.params.id);
+    return res.redirect('/admin/cart');
+  }
 
-  return res.redirect('/admin/cart');
+  const userDni = req.body.userDni || req.body.user_dni || req.session?.user?.dni;
+  const productId = req.body.productId;
 
+  if (!userDni) {
+    return res.status(401).json({ message: "Debes iniciar sesión para usar el carrito" });
+  }
+
+  if (!productId) {
+    return res.status(400).json({ message: "productId es obligatorio" });
+  }
+
+  const cartItem = await cartService.getCartItemByUserAndProduct(userDni, productId);
+  if (!cartItem) {
+    return res.status(404).json({ message: "Ítem del carrito no encontrado" });
+  }
+
+  await cartService.deleteCartItem(cartItem.id);
+  return res.status(200).json({ ok: true });
 };
 
 async function getViewEditCart(req, res) {
@@ -150,16 +167,16 @@ async function getViewEditCart(req, res) {
 }
 
 
-
-
 export const cartViewController = {
   getAllCartItems,
   updateCartItem,
   deleteCartItem,
   getAllViewCartItems,
-  getViewEditCart
+  getViewEditCart,
+  getCartItems,
+  createCartItem,
+  getCheckout,
+  simulateCheckout,
 };
-
-
 
 export default cartViewController;

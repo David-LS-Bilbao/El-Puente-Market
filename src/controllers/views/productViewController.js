@@ -1,13 +1,16 @@
 import productServices from "../../services/productServices.js";
-import categoryService from '../../services/categoryService.js'
+import cartServices from "../../services/cartService.js";
+import categoryService from '../../services/categoryService.js';
 
-/**
- * Obtiene todos los productos almacenados en la base de datos.
- *
- * @param {import('express').Request} req - Objeto de petición HTTP.
- * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve la lista de productos.
- * @returns {Promise<void>}
- */
+async function getAllProductsAndCart(req, res) {
+  const products = await productServices.getAllProducts();
+  const categories = await categoryService.getAllCategory();
+  const userDni = req.session?.user?.dni || '12345678A';
+  const cartSidebar = await cartServices.getCartViewData(userDni);
+
+  res.render("pages/index", { products, categories, cartSidebar, userDni, activeCategoryId: null, layout: "layouts/main" });
+}
+
 async function getAllProducts(req, res) {
   const products = await productServices.getAllProducts();
   res.render("pages/index", { products, layout: "layouts/main" });
@@ -37,13 +40,31 @@ async function getProductsByCategory(req, res) {
   res.json(products);
 }
 
-/**
- * Crea un nuevo producto en la base de datos a partir de los datos recibidos en el body.
- *
- * @param {import('express').Request} req - Objeto de petición HTTP con los datos del nuevo producto en `req.body`.
- * @param {import('express').Response} res - Objeto de respuesta HTTP que devuelve el producto creado.
- * @returns {Promise<void>}
- */
+async function getProductById(req, res) {
+  const product = await productServices.getProductById(req.params.id);
+  const categories = await categoryService.getAllCategory();
+  const userDni = req.session?.user?.dni || '12345678A';
+  const cartSidebar = await cartServices.getCartViewData(userDni);
+  if (!product) {
+    return res.status(404).render("pages/productDetails", {
+      product: null,
+      categories,
+      cartSidebar,
+      userDni,
+      activeCategoryId: null,
+      layout: "layouts/main"
+    });
+  }
+  res.render("pages/productDetails", {
+    product,
+    categories,
+    cartSidebar,
+    userDni,
+    activeCategoryId: product.id_category,
+    layout: "layouts/main"
+  });
+}
+
 async function addNewProduct(req, res) {
   const newProduct = await productServices.addNewProduct(req.body);
   return res.redirect('/admin/product');
@@ -65,13 +86,6 @@ async function updateProduct(req, res) {
 }
 
 
-/**
- * Elimina un producto de la base de datos identificado por su id.
- *
- * @param {import('express').Request} req - Objeto de petición HTTP que contiene el id del producto en `req.params`.
- * @param {import('express').Response} res - Objeto de respuesta HTTP.
- * @returns {Promise<void>}
- */
 async function deleteProduct(req, res) {
   const product = await productServices.deleteProduct(req.params.id);
   res.redirect('/admin/product');
@@ -105,8 +119,11 @@ async function getViewEditProduct(req, res) {
   }
 }
 
-async function getProductById(req, res) {
+async function getProductViewById(req, res) {
   const product = await productServices.getProductById(req.params.id);
+  if (!product) {
+    return res.status(404).redirect("/admin/product");
+  }
   return res.render("dashboard/product/detailProduct", {
     product,
     layout: "layouts/dashboard"
@@ -115,15 +132,17 @@ async function getProductById(req, res) {
 
 
 
-export const functions = {
+export const productViewController = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   updateProduct,
   deleteProduct,
   getAllViewProducts,
   getViewCreateProduct,
   getViewEditProduct,
-  getProductById
+  getProductViewById,
+  getAllProductsAndCart
 };
-export default functions;
+export default productViewController;

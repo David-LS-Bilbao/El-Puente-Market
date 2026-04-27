@@ -49,12 +49,12 @@ async function checkCredentials(req, res, next) {
         type: user.type,
         username: user.username
     }
-    return res.redirect("/admin");
+    return res.redirect(user.type === "admin" ? "/admin" : "/");
     //next();
 }
 
 async function isLoggedIn(req, res, next) {
-    if (req.session.user) {
+    if (req.session && req.session.user) {
         next()
     } else {
         return res.redirect("/auth/login");
@@ -63,7 +63,7 @@ async function isLoggedIn(req, res, next) {
 
 function requireRole(...types) {
     return (req, res, next) => {
-        if (types.includes(req.session.user.type)) {
+        if (req.session && req.session.user && types.includes(req.session.user.type)) {
             next();
         }
         else {

@@ -1,0 +1,33 @@
+<main class="main-content" style="max-width: 900px; margin: 0 auto;">
+    <section class="card" style="background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 24px; margin-top: 24px;">
+        <h1 style="margin-top: 0;">Resumen de pago</h1>
+        <p>Esta es una simulación de compra para el usuario <strong><%= userDni %></strong>.</p>
+
+        <% if (!cartSidebar || cartSidebar.isEmpty) { %>
+            <p>Tu carrito está vacío.</p>
+            <a href="/" class="icon-btn" style="display: inline-block;">Volver a la tienda</a>
+        <% } else { %>
+            <div style="margin: 24px 0;">
+                <% cartSidebar.items.forEach((item) => { %>
+                    <div style="display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #eee;">
+                        <div>
+                            <strong><%= item.productName %></strong>
+                            <div>Cantidad: <%= item.quantity %></div>
+                        </div>
+                        <strong><%= item.subtotalFormatted %></strong>
+                    </div>
+                <% }) %>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                <strong>Total:</strong>
+                <strong><%= cartSidebar.totalGeneralFormatted %></strong>
+            </div>
+
+            <form action="/checkout" method="POST" style="margin-top: 24px;">
+                <button type="submit" class="add-to-cart-btn">Confirmar pago</button>
+                <a href="/" class="icon-btn" style="display: inline-block; margin-left: 12px;">Seguir comprando</a>
+            </form>
+        <% } %>
+    </section>
+</main>

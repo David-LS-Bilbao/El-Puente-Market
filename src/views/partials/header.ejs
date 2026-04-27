@@ -1,17 +1,24 @@
 <header class="header">
+    <% const currentUser = typeof user !== 'undefined' ? user : null; %>
+    <% const profileHref = !currentUser ? '/auth/login' : currentUser.type === 'admin' ? '/admin' : '/'; %>
 
     <div class="header-top">
 
         <!-- IZQUIERDA: logo + título -->
         <div class="left">
-            <img src="/img/logo.png" alt="Logo El Puente" class="logo">
+            <a href="/"><img src="/img/logo.png" alt="Logo El Puente" class="logo"></a>
         </div>
 
         <!-- DERECHA: acciones -->
         <div class="right">
+            <% if (currentUser) { %>
+                <span class="user-sub-text">Hola, <%= currentUser.username %></span>
+            <% } %>
 
             <!-- Carrito -->
-            <a href="/carrito" class="icon-btn">
+            <a href="#" class="icon-btn" data-cart-sidebar-trigger
+                data-cart-sidebar-user-dni="<%= currentUser?.dni || (typeof userDni !== 'undefined' ? userDni : '') %>"
+                aria-label="Abrir carrito">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -20,7 +27,8 @@
             </a>
 
             <!-- Login -->
-            <a href="/login" class="icon-btn">
+            <a href="<%= profileHref %>" class="icon-btn"
+                title="<%= currentUser ? ('Sesión iniciada: ' + currentUser.username) : 'Iniciar sesión' %>">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,8 +37,23 @@
 
             </a>
 
+            <% if (currentUser) { %>
+                <form action="/auth/logout" method="POST" style="margin: 0;">
+                    <button type="submit" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión"
+                        style="background: none; border: none; padding: 0; cursor: pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6A2.25 2.25 0 0 0 15.75 18.75V15m3 0 3-3m0 0-3-3m3 3H9" />
+                        </svg>
+                    </button>
+                </form>
+            <% } %>
+
         </div>
 
     </div>
 
 </header>
+
+<%- include('../partials/cart-sidebar') %>

@@ -4,7 +4,9 @@ import { requireRole } from "../../middlewares/authMiddleware.js";
 
 const categoryRouter = Router();
 
-categoryRouter.get("/", categoryViewController.getAllCategory);
+
+categoryRouter.get("/category/:id", categoryViewController.getProductsByCategory);
+categoryRouter.get("/category/", categoryViewController.getAllCategory);
 categoryRouter.get("/admin/category", requireRole("admin"), categoryViewController.getAllViewCategory);
 categoryRouter.get('/admin/category/create', requireRole("admin"), categoryViewController.getViewCreateCategory);
 categoryRouter.get("/admin/category/details/:id", categoryViewController.getCategoryById);
@@ -15,5 +17,6 @@ categoryRouter.post("/admin/category", requireRole("admin"), categoryViewControl
 categoryRouter.post("/admin/category/:id", requireRole("admin"), categoryViewController.updateCategory);
 
 categoryRouter.post("/admin/category/delete/:id", requireRole("admin"), categoryViewController.deleteCategory);
+
 
 export default categoryRouter;

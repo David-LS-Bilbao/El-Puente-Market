@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="/css/productDetails.css" />
+<main class="product-container">
+    <% if (!product) { %>
+        <div class="product-layout">
+            <section class="product-info">
+                <h1 class="product-title">Producto no encontrado</h1>
+                <p class="description">El producto que intentas ver no existe o ya no está disponible.</p>
+            </section>
+        </div>
+        <% } else { %>
+            <div class="product-layout">
+
+                <section class="product-image">
+                    <img src="<%= product.image || '' %>" alt="<%= product.name %>">
+                </section>
+
+                <section class="product-info">
+                    <h1 class="product-title">
+                        <%= product.name %>
+                    </h1>
+
+                    <div class="price-section">
+                        <% if (product.on_discount && product.price_discount) { %>
+                            <span class="old-price">
+                                <%= product.price %>€
+                            </span>
+                            <span class="current-price discount">
+                                <%= product.price_discount %>€
+                            </span>
+                            <span class="badge">¡Oferta!</span>
+                            <% } else { %>
+                                <span class="current-price">
+                                    <%= product.price %>€
+                                </span>
+                                <% } %>
+                    </div>
+
+                    <p class="description">
+                        <%= product.description %>
+                    </p>
+
+                    <div class="purchase-section">
+                        <% if (product.stock> 0) { %>
+                            <p class="stock-status in-stock">
+                                En stock: <strong>
+                                    <%= product.stock %> unidades disponibles
+                                </strong>
+                            </p>
+
+
+                            <form action="/carrito" method="POST" class="add-to-cart-form">
+                                <input type="hidden" name="productId" value="<%= product.id %>">
+                                <input type="hidden" name="userDni" value="<%= typeof userDni !== 'undefined' ? userDni : '' %>">
+
+                                <input type="hidden" name="name" value="<%= product.name %>">
+                                <input type="hidden" name="price" value="<%= product.price %>">
+                                <input type="hidden" name="image" value="<%= product.image %>">
+
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="submit" class="btn-buy">
+                                    Añadir al carrito
+                                </button>
+                            </form>
+                            <% } else { %>
+                                <p class="stock-status out-of-stock">Agotado temporalmente</p>
+                                <button class="btn-disabled" disabled>Sin existencias</button>
+                                <% } %>
+                    </div>
+                </section>
+
+            </div>
+            <% } %>
+</main>

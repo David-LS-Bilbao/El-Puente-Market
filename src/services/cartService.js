@@ -45,6 +45,7 @@ async function getCartViewData(userDni) {
 
   const items = cartItems.map((item) => ({
     id: item.id,
+    product_id: item.product_id,
     quantity: item.quantity,
     subtotal: Number(item.total_amount || 0),
     subtotalFormatted: currencyFormatter.format(Number(item.total_amount || 0)),
@@ -95,6 +96,16 @@ async function deleteCartItem(id) {
   });
 }
 
+async function clearCartByUser(userDni) {
+  return CartModel.destroy({
+    where: { user_dni: userDni },
+  });
+}
+
+async function removeFromCart(user_dni, product_id) {
+  return CartModel.destroy({ where: { user_dni, product_id } });
+};
+
 export const functions = {
   createCartItem,
   deleteCartItem,
@@ -104,7 +115,9 @@ export const functions = {
   getCartItemByUserAndProduct,
   getCartItemRecordById,
   getCartItemsByUser,
+  clearCartByUser,
   updateCartItem,
+  removeFromCart
 };
 
 export default functions;

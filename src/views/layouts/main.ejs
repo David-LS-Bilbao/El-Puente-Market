@@ -2,20 +2,19 @@
 <html>
 
 <head>
-    <title>El Puente</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+  <title>El Puente</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/cart.css" />
+  <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
 </head>
 
 <body>
+  <%- include('../partials/header') %>
+    <%- include('../partials/navbar') %>
 
-    <%- include('../partials/header') %>
+      <main class="main-content"><%- body %></main>
 
-        <main class="main-content">
-            <%- body %>
-        </main>
-
-        <%- include('../partials/footer') %>
+      <%- include('../partials/footer') %>
 
 </body>
 
