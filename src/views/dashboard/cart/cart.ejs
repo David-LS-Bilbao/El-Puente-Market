@@ -1,0 +1,67 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Carrito de Compras</h1>
+        <p class="header-subtitle">Gestión de artículos seleccionados por usuarios</p>
+    </div>
+    <!-- Nota: Normalmente el carrito se gestiona desde la tienda, 
+         pero mantenemos el botón por consistencia con tu diseño -->
+    <a href="/" class="btn btn-primary">Ver Catálogo</a>
+</div>
+
+<div class="card card-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Usuario (DNI)</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+                <th style="text-align: right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% cartItems.forEach(item=> { %>
+                <tr>
+                    <td>
+                        <div class="user-main-text">
+                            <!-- Asumiendo que haces un include de 'Product' en la consulta -->
+                            <%= item.Product ? item.Product.name : 'Producto #' + item.product_id %>
+                        </div>
+                        <small class="user-sub-text">
+                            ID Producto: <%= item.product_id %>
+                        </small>
+                    </td>
+                    <td>
+                        <div class="user-main-text">
+                            <%= item.user_dni %>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="user-main-text">
+                            <%= item.quantity %> uds.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="user-main-text">
+                            <!-- Calculamos el precio unitario del total si no viene en el include -->
+                            <%= (item.total_amount / item.quantity).toFixed(2) %>€
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-main-text" style="font-weight: bold; color: var(--color-primary);">
+                            <%= item.total_amount %>€
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="/admin/cart/edit/<%= item.id %>" class="btn btn-warning btn-action">Editar</a>
+                        <form action="/admin/cart/delete/<%= item.id %>" method="POST" style="display:inline;"
+                            onsubmit="return confirm('¿Eliminar este artículo del carrito?')">
+                            <button type="submit" class="btn btn-danger btn-action">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>

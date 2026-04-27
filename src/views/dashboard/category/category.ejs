@@ -1,0 +1,45 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Categorías</h1>
+        <p class="header-subtitle">Gestión de agrupaciones de productos</p>
+    </div>
+    <a href="/admin/category/create" class="btn btn-primary">+ Nueva Categoría</a>
+</div>
+
+<div class="card card-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 100px;">ID</th>
+                <th>Nombre de la Categoría</th>
+                <th style="text-align: right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% categories.forEach(category=> { %>
+                <tr>
+                    <td>
+                        <span class="user-sub-text">#<%= category.id %></span>
+                    </td>
+                    <td>
+                        <div class="user-main-text">
+
+                            <a href="/admin/category/details/<%= category.id %>" class="user-link">
+                                <%= category.name %>
+                            </a>
+
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="/admin/category/edit/<%= category.id %>" class="btn btn-warning btn-action">Editar</a>
+
+                        <form action="/admin/category/delete/<%= category.id %>" method="POST" style="display:inline;"
+                            onsubmit="return confirm('¿Estás seguro? Se podrían desvincular productos de esta categoría.')">
+                            <button type="submit" class="btn btn-danger btn-action">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>

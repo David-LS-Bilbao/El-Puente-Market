@@ -1,0 +1,25 @@
+<div class="dashboard-header">
+    <div class="header-title">
+        <h1>Nueva Categoría</h1>
+        <p class="header-subtitle">Añadir una nueva clasificación para productos</p>
+    </div>
+    <a href="/admin/category" class="btn btn-secondary">← Volver</a>
+</div>
+
+<div class="card card-form">
+    <form action="/admin/category" method="POST">
+        <div class="form-section">
+            <div class="section-title"><span class="step-number">1</span>Datos de la Categoría</div>
+            <div class="form-grid">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Nombre de la Categoría</label>
+                    <input type="text" name="name" placeholder="Ej: Periféricos, Componentes..." required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-large">Crear Categoría</button>
+        </div>
+    </form>
+</div>
