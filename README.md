@@ -425,6 +425,7 @@ El trabajo se hizo con ramas independientes y merges progresivos. Esto permitio 
 
 En la carpeta `docs/` se han ido recogiendo documentos de apoyo para la memoria:
 
+- [Memoria tecnica final en PDF](docs/memoria_tecnica_el_puente_market_sin_capturas_jira.pdf)
 - Resumen del proyecto.
 - Requisitos y casos de uso.
 - Arquitectura de la aplicacion.
