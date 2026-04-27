@@ -1,8 +1,10 @@
 <nav class="category-nav">
-
+    <% const safeCategories = Array.isArray(categories) ? categories : []; %>
     <ul class="category-list">
-        <% categories.forEach(category => { %>
-            <li class="category-item"><a href="/category/<%= category.id %>"><%= category.name %></a></li>
+        <% safeCategories.forEach(category => { %>
+            <li class="category-item">
+                <a href="/category/<%= category.id %>" class="<%= Number(activeCategoryId) === Number(category.id) ? 'is-active' : '' %>"><%= category.name %></a>
+            </li>
         <% }) %>
     </ul>
 </nav>

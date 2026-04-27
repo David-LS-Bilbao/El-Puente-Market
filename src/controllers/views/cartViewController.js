@@ -60,6 +60,45 @@ async function getAllViewCartItems(req, res) {
 
 };
 
+async function getCheckout(req, res) {
+  const userDni = req.session?.user?.dni;
+  if (!userDni) {
+    return res.redirect("/auth/login?message=Debes iniciar sesión para pagar");
+  }
+
+  const cartSidebar = await cartService.getCartViewData(userDni);
+  return res.render("pages/checkout", {
+    cartSidebar,
+    userDni,
+    categories: [],
+    activeCategoryId: null,
+    layout: "layouts/main"
+  });
+}
+
+async function simulateCheckout(req, res) {
+  const userDni = req.session?.user?.dni;
+  if (!userDni) {
+    return res.redirect("/auth/login?message=Debes iniciar sesión para pagar");
+  }
+
+  const cartSidebar = await cartService.getCartViewData(userDni);
+  if (cartSidebar.isEmpty) {
+    return res.redirect("/?message=Tu carrito ya está vacío");
+  }
+
+  await cartService.clearCartByUser(userDni);
+
+  return res.render("pages/checkout-success", {
+    paidItems: cartSidebar.items,
+    totalGeneralFormatted: cartSidebar.totalGeneralFormatted,
+    userDni,
+    categories: [],
+    activeCategoryId: null,
+    layout: "layouts/main"
+  });
+}
+
 async function updateCartItem(req, res) {
   try {
     const { id } = req.params;
@@ -136,6 +175,8 @@ export const cartViewController = {
   getViewEditCart,
   getCartItems,
   createCartItem,
+  getCheckout,
+  simulateCheckout,
 };
 
 export default cartViewController;

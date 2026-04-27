@@ -1,0 +1,18 @@
+<main class="main-content" style="max-width: 900px; margin: 0 auto;">
+    <section class="card" style="background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 24px; margin-top: 24px;">
+        <h1 style="margin-top: 0;">Pago realizado</h1>
+        <p>La compra se ha simulado correctamente para <strong><%= userDni %></strong>.</p>
+        <p>Total pagado: <strong><%= totalGeneralFormatted %></strong></p>
+
+        <div style="margin: 24px 0;">
+            <% paidItems.forEach((item) => { %>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #eee;">
+                    <span><%= item.productName %> x <%= item.quantity %></span>
+                    <strong><%= item.subtotalFormatted %></strong>
+                </div>
+            <% }) %>
+        </div>
+
+        <a href="/" class="add-to-cart-btn" style="display: inline-block; text-decoration: none;">Volver a la tienda</a>
+    </section>
+</main>

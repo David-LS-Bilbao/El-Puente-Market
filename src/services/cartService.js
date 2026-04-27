@@ -96,6 +96,12 @@ async function deleteCartItem(id) {
   });
 }
 
+async function clearCartByUser(userDni) {
+  return CartModel.destroy({
+    where: { user_dni: userDni },
+  });
+}
+
 async function removeFromCart(user_dni, product_id) {
   return CartModel.destroy({ where: { user_dni, product_id } });
 };
@@ -109,6 +115,7 @@ export const functions = {
   getCartItemByUserAndProduct,
   getCartItemRecordById,
   getCartItemsByUser,
+  clearCartByUser,
   updateCartItem,
   removeFromCart
 };

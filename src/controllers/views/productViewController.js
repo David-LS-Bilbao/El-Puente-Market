@@ -8,7 +8,7 @@ async function getAllProductsAndCart(req, res) {
   const userDni = req.session?.user?.dni || '12345678A';
   const cartSidebar = await cartServices.getCartViewData(userDni);
 
-  res.render("pages/index", { products, categories, cartSidebar, userDni, layout: "layouts/main" });
+  res.render("pages/index", { products, categories, cartSidebar, userDni, activeCategoryId: null, layout: "layouts/main" });
 }
 
 async function getAllProducts(req, res) {
@@ -51,10 +51,18 @@ async function getProductById(req, res) {
       categories,
       cartSidebar,
       userDni,
+      activeCategoryId: null,
       layout: "layouts/main"
     });
   }
-  res.render("pages/productDetails", { product, categories, cartSidebar, userDni, layout: "layouts/main" });
+  res.render("pages/productDetails", {
+    product,
+    categories,
+    cartSidebar,
+    userDni,
+    activeCategoryId: product.id_category,
+    layout: "layouts/main"
+  });
 }
 
 async function addNewProduct(req, res) {

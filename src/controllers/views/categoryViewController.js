@@ -45,6 +45,7 @@ async function getProductsByCategory(req, res) {
         categories,
         cartSidebar,
         userDni,
+        activeCategoryId: Number(req.params.id),
         layout: 'layouts/main'
     });
 }
