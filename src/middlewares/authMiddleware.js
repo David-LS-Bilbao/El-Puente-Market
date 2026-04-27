@@ -35,22 +35,31 @@ async function isRegisterDataCorrect(req, res, next) {
 }
 
 async function checkCredentials(req, res, next) {
-    const user = await userService.getUserByDNI(req.body.dni);
-    if (!user) {
-        return res.redirect("/auth/login?message=Credenciales incorrectas");
+    try {
+        const user = await userService.getUserByDNI(req.body.dni);
+
+        if (!user) {
+            return res.redirect("/auth/login?message=Credenciales incorrectas");
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
+
+        if (!isPasswordCorrect) {
+            return res.redirect("/auth/login?message=Credenciales incorrectas");
+        }
+
+        req.authUser = {
+            dni: user.dni,
+            email: user.email,
+            type: user.type,
+            username: user.username
+        };
+
+        return next();
+    } catch (error) {
+        console.error(error);
+        return res.redirect("/auth/login?message=No se pudo iniciar sesión");
     }
-    const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isPasswordCorrect) {
-        return res.redirect("/auth/login?message=Credenciales incorrectas");
-    }
-    req.session.user = {
-        dni: user.dni,
-        email: user.email,
-        type: user.type,
-        username: user.username
-    }
-    return res.redirect("/admin");
-    //next();
 }
 
 async function isLoggedIn(req, res, next) {
@@ -63,13 +72,15 @@ async function isLoggedIn(req, res, next) {
 
 function requireRole(...types) {
     return (req, res, next) => {
+        if (!req.session || !req.session.user) {
+            return res.redirect("/auth/login");
+        }
         if (types.includes(req.session.user.type)) {
             next();
+        } else {
+            res.status(403).redirect("/auth/login");
         }
-        else {
-            res.status(403).redirect("/auth/login")
-        }
-    }
+    };
 }
 
 

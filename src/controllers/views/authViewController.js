@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import userService from "../../services/userService.js"
 
 async function register(req, res) {
@@ -20,39 +18,26 @@ async function register(req, res) {
 
 async function login(req, res) {
     try {
-        const user = await userService.getUserByDNI(req.body.dni);
-        if (!user) {
-            return res.status(401).json({ error: "Credenciales incorrectas" });
-        }
-        const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ error: "Credenciales incorrectas" });
-        }
-        const payload = {
-            id: user.dni,
-            email: user.email,
-            role: user.role,
-            name: user.name
-        }
-        const token = jwt.sign(payload, process.env.JWT_SECRET || "dev-jwt-secret");
-        return res.render("dashboard/index", {
-            layout: "layouts/dashboard"
-        });
-
+        req.session.user = req.authUser;
+        const redirect = req.authUser.type === "admin" ? "/admin" : "/";
+        return res.redirect(redirect);
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.redirect("/auth/login?message=No se pudo iniciar sesión");
     }
 }
 
 async function getLogin(req, res) {
     return res.render("auth/index", {
-        layout: "layouts/auth"
+        layout: "layouts/auth",
+        message: req.query.message ?? null
     });
 }
 
 async function getRegister(req, res) {
     return res.render("auth/register", {
-        layout: "layouts/auth"
+        layout: "layouts/auth",
+        message: req.query.message ?? null
     });
 }
 async function logout(req, res) {

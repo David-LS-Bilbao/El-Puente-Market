@@ -11,7 +11,7 @@ function checkProductId(req, res, next) {
   id = Number(id);
 
   if (!Number.isInteger(id)) {
-    res.status(400).json({ error: "id is not an integer" });
+    return res.status(400).json({ error: "id is not an integer" });
   }
 
   return next();
