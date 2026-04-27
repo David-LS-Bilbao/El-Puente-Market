@@ -1,0 +1,75 @@
+<div class="dashboard-header">
+    <div>
+        <h1>Productos</h1>
+        <p class="header-subtitle">Gestión de inventario y catálogo</p>
+    </div>
+    <a href="/admin/product/create" class="btn btn-primary">+ Nuevo Producto</a>
+</div>
+
+<div class="card card-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product=> { %>
+                <tr>
+                    <td style="width: 80px;">
+                        <img src="<%= product.image || '/img/no-product.png' %>" alt="<%= product.name %>"
+                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--color-gray-light);">
+                    </td>
+                    <td>
+                        <div class="user-main-text">
+                            <a href="/admin/product/details/<%= product.id %>" class="user-link">
+                                <%= product.name %>
+                            </a>
+                        </div>
+                        <small class="user-sub-text">
+                            Cat ID: <%= product.id_category %>
+                        </small>
+                    </td>
+                    <td>
+                        <% if (product.on_discount && product.price_discount) { %>
+                            <div class="user-main-text" style="color: var(--color-btn-danger);">
+                                <%= product.price_discount %>€
+                            </div>
+                            <small class="user-sub-text" style="text-decoration: line-through;">
+                                <%= product.price %>€
+                            </small>
+                            <% } else { %>
+                                <div class="user-main-text">
+                                    <%= product.price %>€
+                                </div>
+                                <% } %>
+                    </td>
+                    <td>
+                        <span class="user-main-text <%= product.stock < 10 ? 'text-danger' : '' %>">
+                            <%= product.stock %> uds.
+                        </span>
+                    </td>
+                    <td>
+                        <% if (product.on_discount) { %>
+                            <span class="user-type" style="background: #fff4e5; color: #ff9800;">Oferta</span>
+                            <% } else { %>
+                                <span class="user-type" style="background: #ebfbee; color: #2ecc71;">Normal</span>
+                                <% } %>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="/admin/product/edit/<%= product.id %>" class="btn btn-warning btn-action">Editar</a>
+                        <form action="/admin/product/delete/<%= product.id %>" method="POST" style="display:inline;"
+                            onsubmit="return confirm('¿Estás seguro de que quieres eliminar este producto?')">
+                            <button type="submit" class="btn btn-danger btn-action">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>

@@ -6,6 +6,7 @@ async function getAllProducts() {
 }
 
 async function getProductsByCategory(id) {
+  console.log(id)
   const products = await ProductModel.findAll({
     where: { id_category: id },
     include: [CategoryModel],
@@ -33,11 +34,19 @@ async function deleteProduct(id) {
   return deletedProduct;
 }
 
+async function getProductById(id) {
+  const product = await ProductModel.findByPk(id, {
+    include: [CategoryModel],
+  });
+  return product;
+}
+
 export const functions = {
   getAllProducts,
   getProductsByCategory,
+  getProductById,
   addNewProduct,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 };
 export default functions;
