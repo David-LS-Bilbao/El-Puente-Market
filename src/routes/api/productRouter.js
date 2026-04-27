@@ -1,16 +1,15 @@
 import { Router } from "express";
 import productController from "../../controllers/api/productController.js";
 import functions from "../../controllers/api/productController.js";
-import productMiddlewares from '../../middlewares/productMiddleware.js';
 
 const productRouter = Router();
 
 productRouter.get("/", functions.getAllProducts);
-productRouter.get("/category/:id", productMiddlewares.checkProductId, functions.getProductsByCategory);
+productRouter.get("/category/:id", functions.getProductsByCategory);
 
-productRouter.post("/", productMiddlewares.checkNewProduct, functions.addNewProduct);
-productRouter.put("/:id", productMiddlewares.checkProductId, productMiddlewares.checkProduct, functions.changeProduct);
-productRouter.patch("/:id", productMiddlewares.checkProductId, functions.changeProductField);
-productRouter.delete("/:id", productMiddlewares.checkProductId, functions.deleteProduct);
+productRouter.post("/", functions.addNewProduct);
+productRouter.put("/:id", functions.changeProduct);
+productRouter.patch("/:id", functions.changeProductField);
+productRouter.delete("/:id", functions.deleteProduct);
 
 export default productRouter;

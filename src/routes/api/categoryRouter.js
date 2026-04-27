@@ -1,5 +1,5 @@
 import { Router } from "express";
-import categoryController from "../controllers/api/categoryController.js";
+import categoryController from "../../controllers/api/categoryController.js";
 
 const categoryRouter = Router();
 
@@ -13,4 +13,4 @@ categoryRouter.put("/:id", categoryController.updateCategory);
 
 categoryRouter.delete("/:id", categoryController.deleteCategory);
 
-export default categoryRouter;
+export default categoryRouter;  
